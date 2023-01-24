@@ -40,12 +40,3 @@ def hash_collision(k):
         hash_key_y = hash_binary_y[len(hash_binary_y) - k:]
 
     return (x, y)
-
-  '''print ("hashcode in binary is",hash_binary)
-    print("length of hashcode is", len(hash_binary)
-    print("length of key is", len(hash_key))
-    print ("key is", hash_key)
-
-
-    print (hash_collision(1))
-    print (hash_collision(3))'''
