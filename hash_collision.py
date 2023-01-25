@@ -38,5 +38,8 @@ def hash_collision(k):
         hash_y = hashlib.sha256(y.encode('utf-8')).hexdigest()
         hash_binary_y = bin(int(hash_y, 16))
         hash_key_y = hash_binary_y[len(hash_binary_y) - k:]
-
+    
+    x = x.encode('utf-8')
+    y = y.encode('utf-8')
     return (x, y)
+
