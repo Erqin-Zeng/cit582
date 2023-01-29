@@ -20,7 +20,7 @@ def encrypt(pk, m):
 
 
 def decrypt(sk, c):
-    c1_a = pow(c[0], sk)
-    c2_c1_a = c[1]/c1_a
-    m = pow(c2_c1_a, 1, p)
+    c1_pw_a = pow(c[0], sk)
+    c2_over_c1_pw_a = c[1]/c1_pw_a
+    m = pow(c2_over_c1_pw_a, 1, p)
     return m
