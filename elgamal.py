@@ -20,6 +20,6 @@ def encrypt(pk, m):
 
 
 def decrypt(sk, c):
-    bottom = pow(c[0], sk)
-    m = pow(int(c[1]/bottom), 1, p)
+    x = pow(c[0], p-1-sk, p) 
+    m = pow(x * c[1], 1, p)
     return m
