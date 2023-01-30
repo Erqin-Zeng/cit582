@@ -21,5 +21,5 @@ def encrypt(pk, m):
 
 def decrypt(sk, c):
     bottom = pow(c[0], sk)
-    m = pow(c[1]/bottom, 1, p)
+    m = pow(int(c[1]/bottom), 1, p)
     return m
