@@ -7,11 +7,7 @@ from hashlib import sha256
 def sign(m):
 	#generate public key
 	#Your code here
-	#G = secp256k1.G
-	#n = G.order()
 	private_key, public_key = gen_keypair(curve.secp256k1)
-
-	#public_key = public_key
 
 	#generate signature
 	#Your code here
@@ -19,10 +15,8 @@ def sign(m):
 	#z = sha256(m)
 	r, s = ecdsa.sign(m, private_key, hashfunc=sha256)
 
-	#r = pow(x1, 1, n)
-	#s = 0
 
 	assert isinstance( public_key, point.Point)
-	assert isinstance( r, int )
-	assert isinstance( s, int )
-	return( public_key, [r,s] )
+	assert isinstance(r, int)
+	assert isinstance(s, int)
+	return public_key, [r, s]
