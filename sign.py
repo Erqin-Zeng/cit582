@@ -7,9 +7,10 @@ from hashlib import sha256
 def sign(m):
 	#generate public key
 	#Your code here
-	G = secp256k1.G
+	#G = secp256k1.G
 	#n = G.order()
-	private_key, public_key = keys.gen_keypair(G)
+	#private_key, public_key = keys.gen_keypair(G)
+	private_key, public_key = fastecdsa.keys.gen_keypair(fastecdsa.curve.secp256k1)
 
 
 	#public_key = public_key
