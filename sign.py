@@ -7,20 +7,18 @@ from hashlib import sha256
 def sign(m):
 	#generate public key
 	#Your code here
-	G = secp256k1.G
+	#G = secp256k1.G
 	#n = G.order()
-	private_key, public_key = fastecdsa.gen_keypair(G)
+	private_key, public_key = fastecdsa.keys.gen_keypair(fastecdsa.curve.secp256k1)
 
 
-	public_key = public_key
+	#public_key = public_key
 
 	#generate signature
 	#Your code here
 
 	#z = sha256(m)
-	r, s = fastecdsa.sign(m, private_key)
-
-
+	r, s = ecdsa.sign(m, private_key, hashfunc=sha256)
 
 	#r = pow(x1, 1, n)
 	#s = 0
