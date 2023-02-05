@@ -42,6 +42,6 @@ def app_five(block_list):
     last_block = block_list[len(block_list)-1]
 
     for i in range(6):
-        new_block = Block(last_block)
+        new_block = next_block(last_block)
         block_list.append(new_block)
         last_block = block_list[len(block_list)-1]
