@@ -39,6 +39,10 @@ def next_block(last_block):
 
 # append 5 blocks to the blockchain
 def app_five(block_list):
+    
+    if len(block_list) == 0:
+        block_list.append(create_genesis_block())
+    
     last_block = block_list[len(block_list)-1]
 
     for i in range(6):
