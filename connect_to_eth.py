@@ -15,4 +15,4 @@ def connect_to_eth():
 
 
 if __name__ == "__main__":
-    connectToEth()
+    connect_to_eth()
