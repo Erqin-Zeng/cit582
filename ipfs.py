@@ -9,7 +9,7 @@ def pin_to_ipfs(data):
     project_id = "2La77rgcqFxHLaq1C2Q9JggeJzF"
     url = f'{infura_url}{project_id}'
     response = requests.post(url, headers={'Content-Type': 'application/json'}, data=json_data.encode("utf-8"))
-    p = json.loads(response.text)
+    p = response.json()
     cid = p['Hash']
     return cid
 
