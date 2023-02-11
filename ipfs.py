@@ -12,7 +12,7 @@ def pin_to_ipfs(data):
     infura_url = 'https://ipfs.infura.io:5001/api/v0/add'
     project_id = "2La77rgcqFxHLaq1C2Q9JggeJzF"
     project_secret = 'fc4db061014f8f7db76ae4ca4c152ac3'
-    response = requests.post(infura_url, data=data, auth=(project_id, project_secret))
+    response = requests.post(infura_url, json=json_data, auth=(project_id, project_secret))
     p = response.json()
     cid = p['Hash']
     return cid
