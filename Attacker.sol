@@ -42,9 +42,10 @@ contract Attacker is AccessControl, IERC777Recipient {
 			
       if(depth < max_depth){
         depth ++;
+	emit Recurse(depth);
         bank.claimAll();
       }
-      emit Recurse(depth);
+      
     
 	}
 
