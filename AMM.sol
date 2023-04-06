@@ -87,9 +87,9 @@ contract AMM is AccessControl{
 	function provideLiquidity( uint256 amtA, uint256 amtB ) public {
 		require( amtA > 0 || amtB > 0, 'Cannot provide 0 liquidity' );
 		//YOUR CODE HERE
-    require( tokenA.transferFrom(msg.sender, address(this), amtA), "TokenA transferFrom failed" );
-    require( tokenB.transferFrom(msg.sender, address(this), amtB), "TokenB transferFrom failed" );
-    invariant = tokenA.balanceOf(address(this)) * tokenB.balanceOf(address(this));
+    		tokenA.transferFrom(msg.sender, address(this), amtA);
+    		tokenB.transferFrom(msg.sender, address(this), amtB);
+    		invariant = tokenA.balanceOf(address(this)) * tokenB.balanceOf(address(this));
 		emit LiquidityProvision( msg.sender, amtA, amtB );
 	}
 
