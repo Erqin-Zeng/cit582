@@ -62,8 +62,7 @@ contract AMM is AccessControl{
       qtyA = ((10000-feebps)/10000)*sellAmount;
       ERC20(tokenA).transferFrom(msg.sender, address(this), sellAmount);
       qtyB = ERC20(tokenB).balanceOf(address(this)) - invariant/ERC20(tokenA).balanceOf(address(this));
-			uint256 qtyB_wfee = ERC20(tokenB).balanceOf(address(this)) - invariant/(ERC20(tokenA).balanceOf(address(this))-sellAmount+qtyA);
-      swapAmt = qtyB_wfee;    
+      swapAmt = ((10000-feebps)/10000)*qtyB;    
       ERC20(tokenB).transfer(msg.sender, swapAmt);
       emit Swap( tokenA, tokenB, sellAmount, swapAmt);
     } 
@@ -73,8 +72,7 @@ contract AMM is AccessControl{
       qtyB = ((10000-feebps)/10000)*sellAmount;
       ERC20(tokenB).transferFrom(msg.sender, address(this), sellAmount);
 			qtyA = ERC20(tokenA).balanceOf(address(this)) - invariant/ERC20(tokenB).balanceOf(address(this));
-      uint256 qtyA_wfee = ERC20(tokenA).balanceOf(address(this)) - invariant/(ERC20(tokenB).balanceOf(address(this))-sellAmount+qtyB);
-      swapAmt = qtyA_wfee; 
+      swapAmt = ((10000-feebps)/10000)*qtyA;
       ERC20(tokenA).transfer(msg.sender, swapAmt);
       emit Swap( tokenB, tokenA, sellAmount, swapAmt);
     }
