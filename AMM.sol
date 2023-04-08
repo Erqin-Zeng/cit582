@@ -43,7 +43,6 @@ contract AMM is AccessControl{
 		The main trading functions
 		
 		User provides sellToken and sellAmount
-
 		The contract must calculate buyAmount using the formula:
 	*/
 	function tradeTokens( address sellToken, uint256 sellAmount ) public {
@@ -56,32 +55,31 @@ contract AMM is AccessControl{
 		uint256 swapAmt;
 
 		//YOUR CODE HERE 
+		
     
-    if (sellToken == tokenA) {    
-			qtyA = ((10000-feebps)/10000)*sellAmount;	
-			require( qtyA > 0, 'Cannot trade 0' );	    
-      swapAmt = ERC20(tokenB).balanceOf(address(this))*ERC20(tokenA).balanceOf(address(this))/qtyA;
-			qtyB = ((10000-feebps)/10000)*swapAmt;
-			require( qtyB > 0, 'Cannot trade 0' );
-			ERC20(tokenA).transferFrom(msg.sender, address(this), sellAmount);      
-			ERC20(tokenB).transfer(msg.sender, qtyB);
+    if (sellToken == tokenA) {  
+			invariant = ERC20(tokenB).balanceOf(address(this))*ERC20(tokenA).balanceOf(address(this));   
+			ERC20(tokenA).transferFrom(msg.sender, address(this), sellAmount);
+      qtyA = ERC20(tokenA).balanceOf(address(this));
+      qtyB = (10000+feebps)*invariant/(qtyA*10000);
+			swapAmt = ERC20(tokenB).balanceOf(address(this)) - qtyB;     		  
+			ERC20(tokenB).transfer(msg.sender, swapAmt);
       emit Swap( tokenA, tokenB, sellAmount, swapAmt);
-    } 
+		}
 
     if (sellToken == tokenB) {  
-      qtyB = ((10000-feebps)/10000)*sellAmount;		
-			require( qtyB > 0, 'Cannot trade 0' );		   
-			swapAmt = ERC20(tokenB).balanceOf(address(this))*ERC20(tokenB).balanceOf(address(this))/qtyB;
-      qtyA = ((10000-feebps)/10000)*swapAmt;
-			require( qtyA > 0, 'Cannot trade 0' );
-			ERC20(tokenB).transferFrom(msg.sender, address(this), sellAmount);		
-      ERC20(tokenA).transfer(msg.sender, qtyA);
+			invariant = ERC20(tokenB).balanceOf(address(this))*ERC20(tokenA).balanceOf(address(this));   
+			ERC20(tokenB).transferFrom(msg.sender, address(this), sellAmount);
+      qtyB = ERC20(tokenB).balanceOf(address(this));
+      qtyA = (10000+feebps)*invariant/(qtyB*10000);
+			swapAmt = ERC20(tokenA).balanceOf(address(this)) - qtyA;     		  
+			ERC20(tokenA).transfer(msg.sender, swapAmt);
       emit Swap( tokenB, tokenA, sellAmount, swapAmt);
     }
 
-		uint256 new_invariant = ERC20(tokenA).balanceOf(address(this))*ERC20(tokenB).balanceOf(address(this));
-		require( new_invariant >= invariant, 'Bad trade' );
-		invariant = new_invariant;
+		uint256 new_invariant2 = ERC20(tokenA).balanceOf(address(this))*ERC20(tokenB).balanceOf(address(this));
+		require( new_invariant2 >= invariant, 'Bad trade B to A' );
+		invariant = new_invariant2;
 	}
 
 	/*
