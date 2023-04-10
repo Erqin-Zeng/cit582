@@ -34,6 +34,9 @@ def verify():
         if algosdk.util.verify_bytes(payload.encode('utf-8'), algo_sig_str, algo_pk):
             result = True  # Should only be true if signature validates
             return jsonify(result)
-
+    
+    result = False  # Should only be true if signature validates
+    return jsonify(result)
+    
 if __name__ == '__main__':
     app.run(port='5002')
