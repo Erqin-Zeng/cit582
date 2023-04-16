@@ -27,7 +27,7 @@ def verify():
             return jsonify(result)
 
     # Algorand
-    if content.payload.platform == 'Algorand':
+    if content["payload"]["platform"] == 'Algorand':
         payload = content["payload"]
         algo_pk = payload["pk"]
         algo_sig_str = content["sig"]
