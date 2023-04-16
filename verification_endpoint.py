@@ -17,7 +17,7 @@ def verify():
 
     #ethoereum
     if content["payload"]["platform"] == 'Ethereum':
-        eth_pk = content["payload"]["pk']
+        eth_pk = content["payload"]["pk"]
         payload = content["payload"]
         eth_encoded_msg = eth_account.messages.encode_defunct(text=payload)
         eth_sig_obj = content["sig"]
