@@ -17,10 +17,10 @@ def verify():
 
     #ethoereum
     if content["payload"]["platform"] == 'Ethereum':
-        eth_pk = content.payload.pk
-        payload = content.payload
+        eth_pk = content["payload"]["pk']
+        payload = content["payload"]
         eth_encoded_msg = eth_account.messages.encode_defunct(text=payload)
-        eth_sig_obj = content.sig
+        eth_sig_obj = content["sig"]
 
         if eth_account.Account.recover_message(eth_encoded_msg, signature=eth_sig_obj.signature.hex()) == eth_pk:
             result = True  # Should only be true if signature validates
@@ -28,9 +28,9 @@ def verify():
 
     # Algorand
     if content.payload.platform == 'Algorand':
-        payload = content.payload
-        algo_pk = content.payload.pk
-        algo_sig_str = content.sig
+        payload = content["payload"]
+        algo_pk = content["payload.pk"]
+        algo_sig_str = content["sig"]
 
         if algosdk.util.verify_bytes(payload.encode('utf-8'), algo_sig_str, algo_pk):
             result = True  # Should only be true if signature validates
