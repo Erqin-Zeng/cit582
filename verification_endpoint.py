@@ -11,13 +11,13 @@ app.url_map.strict_slashes = False
 @app.route('/verify', methods=['GET','POST'])
 def verify():
     content = request.get_json(silent=True)
-    print (content["payload"]["platform"])
-    print (content)
+    #print (content["payload"]["platform"])
+    #print (content)
     #Check if signature is valid
 
     #ethoereum
     if content["payload"]["platform"] == 'Ethereum':       
-        payload = json.dumps(content["payload"])
+        payload = content["payload"]
         eth_pk = json.dumps(payload["pk"])
         eth_encoded_msg = eth_account.messages.encode_defunct(text=payload)
         eth_sig_obj = content["sig"]
@@ -28,7 +28,7 @@ def verify():
 
     # Algorand
     if content.payload.platform == 'Algorand':
-        payload = json.dumps(content["payload"])
+        payload = content["payload"]
         algo_pk = json.dumps(payload["pk"])
         algo_sig_str = content["sig"]
 
