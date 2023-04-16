@@ -32,7 +32,7 @@ def verify():
         algo_pk = payload["pk"]
         algo_sig_str = content["sig"]
 
-        if algosdk.util.verify_bytes(payload.encode('utf-8'), algo_sig_str, algo_pk):
+        if algosdk.util.verify_bytes(json.dumps(payload).encode('utf-8'), algo_sig_str, algo_pk):
             result = True  # Should only be true if signature validates
             return jsonify(result)
     
