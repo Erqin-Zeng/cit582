@@ -22,7 +22,7 @@ def verify():
         eth_encoded_msg = eth_account.messages.encode_defunct(text=json.dumps(payload))
         eth_sig_obj = content["sig"]
 
-        if eth_account.Account.recover_message(eth_encoded_msg, signature=eth_sig_obj.signature.hex()) == eth_pk:
+        if eth_account.Account.recover_message(eth_encoded_msg, signature=eth_sig_obj) == eth_pk:
             result = True  # Should only be true if signature validates
             return jsonify(result)
 
