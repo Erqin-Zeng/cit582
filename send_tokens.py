@@ -72,17 +72,17 @@ def wait_for_confirmation(client, txid):
     return txinfo
 
 
-'''# generate an account
+# generate an account
  sk, sender_pk = account.generate_account()
 print("Private key:", sk)
 print("Address:", sender_pk)
-check if the address is valid
+
+# check if the address is valid
 if encoding.is_valid_address(sender_pk):
     print("The address is valid!")
 else:
     print("The address is invalid.")
 
- Convert the private key to a mnemonic (25 words)
+# Convert the private key to a mnemonic (25 words)
 mnemonic_phrase = mnemonic.from_private_key(private_key)
-
-print("Generated 25-Word Mnemonic:", mnemonic_phrase)'''
+print("Generated 25-Word Mnemonic:", mnemonic_phrase)
