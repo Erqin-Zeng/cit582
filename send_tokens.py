@@ -5,6 +5,14 @@ from algosdk import mnemonic
 from algosdk import transaction
 from algosdk import account, encoding
 
+
+# Generate or store the mnemonic for the account
+mnemonic_secret = "LmVqWf6+sfMPaHrbY+bf2eLqASNVun20P9GC6S4WxNTeD5jv4BgPnfzMMa0LxToJogq6U7haiTTc7qAS7P+Jjg=="
+
+# Convert the mnemonic to a private key and public key
+sk = mnemonic.to_private_key(mnemonic_secret)
+sender_pk = mnemonic.to_public_key(mnemonic_secret)
+
 #Connect to Algorand node maintained by PureStake
 algod_address = "https://testnet-algorand.api.purestake.io/ps2"
 algod_token = "B3SU4KcVKi94Jap2VXkK83xx38bsv95K5UZm2lab"
@@ -64,9 +72,11 @@ def wait_for_confirmation(client, txid):
 
 
 # generate an account
-sk, sender_pk = account.generate_account()
-print("Private key:", sk)
-print("Address:", sender_pk)
+#sk, sender_pk = account.generate_account()
+#print("Private key:", sk)
+#print("Address:", sender_pk)
+# Private key: LmVqWf6+sfMPaHrbY+bf2eLqASNVun20P9GC6S4WxNTeD5jv4BgPnfzMMa0LxToJogq6U7haiTTc7qAS7P+Jjg==
+#Address: 3YHZR37ADAHZ37GMGGWQXRJ2BGRAVOSTXBNISNG452QBF3H7RGHB776JII
 
 # check if the address is valid
 if encoding.is_valid_address(sender_pk):
