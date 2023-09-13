@@ -37,10 +37,10 @@ def send_tokens( receiver_pk, tx_amount ):
     # Create the transaction
     txn = transaction.PaymentTxn(
         sender=sender_pk,
-        #sp=params,
+        sp=params,
         receiver=receiver_pk,
         amt=tx_amount,
-        gen=gen_hash,
+        gh=gen_hash, #was gen=
         first=first_valid_round,
         last=last_valid_round,
         note=b'',
