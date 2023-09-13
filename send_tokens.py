@@ -73,7 +73,7 @@ def wait_for_confirmation(client, txid):
 
 
 # generate an account
- sk, sender_pk = account.generate_account()
+sk, sender_pk = account.generate_account()
 print("Private key:", sk)
 print("Address:", sender_pk)
 
