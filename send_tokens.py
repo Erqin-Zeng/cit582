@@ -64,12 +64,12 @@ def wait_for_confirmation(client, txid):
 
 
 # generate an account
-sk, pk = account.generate_account()
+sk, sender_pk = account.generate_account()
 print("Private key:", sk)
-print("Address:", pk)
+print("Address:", sender_pk)
 
 # check if the address is valid
-if encoding.is_valid_address(pk):
+if encoding.is_valid_address(sender_pk):
     print("The address is valid!")
 else:
     print("The address is invalid.")
