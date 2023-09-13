@@ -6,9 +6,9 @@ from algosdk import transaction
 from algosdk import account, encoding
 
 # Generate or store the mnemonic for the account
-mnemonic_secret = "hunt include elegant scheme they wool case kiss also provide dash moon toe clinic hockey lobster connect gap mouse napkin leader involve acid ability million"
-#Private key: e5scjwpMcPVnxHo6OGtv+MjxrIwtg3nRVyEvSb/YPSDb9rtJJxHl4pGl943BhokeNz65Yz+D8Xfr7RLoSKi17w==
-#Address: 3P3LWSJHCHS6FENF66G4DBUJDY3T5OLDH6B7C57L5UJOQSFIWXXSQXKWR4
+mnemonic_secret = "eternal chapter thought smile rookie car glue catch height tool auto flame car mention broom print suffer secret glue disorder knee swallow aspect ability delay"
+#Private key: bJrJwcvsXYl8DCRVKzkfhCURLJrDqsWm8Mf2wz1sryEg6ahD4y6K+e6uRqnhuo+Yc73TppN+imaWrsMKutC76A==
+#Address: EDU2QQ7DF2FPT3VOI2U6DOUPTBZ33U5GSN7IUZUWV3BQVOWQXPUL7YYHQA
 
 # Convert the mnemonic to a private key and public key
 sk = mnemonic.to_private_key(mnemonic_secret)
