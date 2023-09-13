@@ -72,7 +72,7 @@ def wait_for_confirmation(client, txid):
     return txinfo
 
 
-# generate an account
+'''# generate an account
 sk, sender_pk = account.generate_account()
 print("Private key:", sk)
 print("Address:", sender_pk)
@@ -85,4 +85,4 @@ else:
 
 # Convert the private key to a mnemonic (25 words)
 mnemonic_phrase = mnemonic.from_private_key(sk)
-print("Generated 25-Word Mnemonic:", mnemonic_phrase)
+print("Generated 25-Word Mnemonic:", mnemonic_phrase)'''
