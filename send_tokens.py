@@ -93,6 +93,6 @@ else:
 #private_key = "LmVqWf6+sfMPaHrbY+bf2eLqASNVun20P9GC6S4WxNTeD5jv4BgPnfzMMa0LxToJogq6U7haiTTc7qAS7P+Jjg=="
 
 # Convert the private key to a mnemonic (25 words)
-mnemonic_phrase = mnemonic.from_private_key(private_key)
+mnemonic_phrase = mnemonic.from_private_key(sk)
 
 print("Generated 25-Word Mnemonic:", mnemonic_phrase)
