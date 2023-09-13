@@ -76,8 +76,6 @@ def wait_for_confirmation(client, txid):
  sk, sender_pk = account.generate_account()
 print("Private key:", sk)
 print("Address:", sender_pk)
-
-
 check if the address is valid
 if encoding.is_valid_address(sender_pk):
     print("The address is valid!")
