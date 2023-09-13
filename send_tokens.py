@@ -5,12 +5,10 @@ from algosdk import mnemonic
 from algosdk import transaction
 from algosdk import account, encoding
 
-
 # Generate or store the mnemonic for the account
 mnemonic_secret = "hunt include elegant scheme they wool case kiss also provide dash moon toe clinic hockey lobster connect gap mouse napkin leader involve acid ability million"
 #Private key: e5scjwpMcPVnxHo6OGtv+MjxrIwtg3nRVyEvSb/YPSDb9rtJJxHl4pGl943BhokeNz65Yz+D8Xfr7RLoSKi17w==
 #Address: 3P3LWSJHCHS6FENF66G4DBUJDY3T5OLDH6B7C57L5UJOQSFIWXXSQXKWR4
-
 
 # Convert the mnemonic to a private key and public key
 sk = mnemonic.to_private_key(mnemonic_secret)
@@ -41,7 +39,7 @@ def send_tokens( receiver_pk, tx_amount ):
         sender=sender_pk,
         sp=params,
         receiver=receiver_pk,
-        amt=amount,
+        amt=tx_amount,
         gen=gen_hash,
         first=first_valid_round,
         last=last_valid_round,
