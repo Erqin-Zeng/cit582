@@ -84,5 +84,5 @@ else:
     print("The address is invalid.")
 
 # Convert the private key to a mnemonic (25 words)
-mnemonic_phrase = mnemonic.from_private_key(private_key)
+mnemonic_phrase = mnemonic.from_private_key(sk)
 print("Generated 25-Word Mnemonic:", mnemonic_phrase)
