@@ -69,7 +69,7 @@ print("Private key:", sk)
 print("Address:", pk)
 
 # check if the address is valid
-if encoding.is_valid_address(address):
+if encoding.is_valid_address(pk):
     print("The address is valid!")
 else:
     print("The address is invalid.")
