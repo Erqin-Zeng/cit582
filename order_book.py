@@ -75,8 +75,8 @@ def process_order(order_data):
             child_sell_amount = (order_data['buy_amount'] - existing_order.sell_amount)* (order_data['sell_amount']/order_data['buy_amount'] )
 
             child_order = Order(
-                buy_currency=order_data.buy_currency,
-                sell_currency=order_data.sell_currency,
+                buy_currency=order_data['buy_currency'],
+                sell_currency=order_data['sell_currency'],
                 buy_amount=order_data['buy_amount'] - existing_order.sell_amount,
                 sell_amount=child_sell_amount,
                 sender_pk=order_data['sender_pk'], 
