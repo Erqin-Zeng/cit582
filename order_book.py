@@ -64,7 +64,7 @@ def process_order(order_data):
             session.commit()
             break
         
-        else existing_order.sell_amount < order_data['buy_amount']:
+        elif existing_order.sell_amount < order_data['buy_amount']:
             # Existing order fully filled, create child order for new order
             existing_order.filled = datetime.now()
             new_order.filled = datetime.now()
@@ -88,8 +88,8 @@ def process_order(order_data):
             session.commit()
             break
 
-
     # Commit changes to the database
     session.commit()
+    break
 
     pass
