@@ -90,6 +90,5 @@ def process_order(order_data):
 
     # Commit changes to the database
     session.commit()
-    break
 
     pass
