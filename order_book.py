@@ -48,24 +48,46 @@ def process_order(order_data):
             new_order.counterparty_id = existing_order.id
 
             # Create a child order for the remaining balance
-            child_sell_amount = min(existing_order.sell_amount * order_data['buy_amount'] / order_data['sell_amount'], existing_order.sell_amount - order_data['buy_amount'])
+            child_sell_amount = (existing_order.buy_amount - order_data['sell_amount'])* (existing_order.sell_amount/existing_order.buy_amount )
 
-            if child_sell_amount >= (existing_order.buy_amount * child_sell_amount / existing_order.sell_amount):
-                # Create a child order if it meets the minimum sell_amount condition
-                child_order = Order(
-                    buy_currency=existing_order.sell_currency,
-                    sell_currency=existing_order.buy_currency,
-                    buy_amount=(existing_order.buy_amount * child_sell_amount / existing_order.sell_amount),
-                    sell_amount=child_sell_amount,
-                    sender_pk=existing_order.receiver_pk,  # Inverse the sender and receiver for child order
-                    receiver_pk=existing_order.sender_pk
-                )
-                child_order.creator_id = existing_order.id  # Set the creator of the child order
-                session.add(child_order)
-                session.commit()
-                break
+            child_order = Order(
+                buy_currency=existing_order.buy_currency,
+                sell_currency=existing_order.sell_currency,
+                buy_amount=existing_order.buy_amount - order_data['sell_amount'],
+                sell_amount=child_sell_amount,
+                sender_pk=existing_order.sender_pk, 
+                receiver_pk=existing_order.receiver_pk
+            )
+
+            child_order.creator_id = existing_order.id  # Set the creator of the child order
+            session.add(child_order)
             session.commit()
             break
+        
+        else existing_order.sell_amount < order_data['buy_amount']:
+            # Existing order fully filled, create child order for new order
+            existing_order.filled = datetime.now()
+            new_order.filled = datetime.now()
+            existing_order.counterparty_id = new_order.id
+            new_order.counterparty_id = existing_order.id
+
+            # Create a child order for the remaining balance
+            child_sell_amount = (order_data['buy_amount'] - existing_order.sell_amount)* (order_data['sell_amount']/order_data['buy_amount'] )
+
+            child_order = Order(
+                buy_currency=order_data.buy_currency,
+                sell_currency=order_data.sell_currency,
+                buy_amount=order_data['buy_amount'] - existing_order.sell_amount,
+                sell_amount=child_sell_amount,
+                sender_pk=order_data['sender_pk'], 
+                receiver_pk=order_data['receiver_pk']
+            )
+
+            child_order.creator_id = order_data.id  # Set the creator of the child order
+            session.add(child_order)
+            session.commit()
+            break
+
 
     # Commit changes to the database
     session.commit()
