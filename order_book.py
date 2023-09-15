@@ -16,7 +16,8 @@ def process_order(order_data):
         buy_amount=order_data['buy_amount'],
         sell_amount=order_data['sell_amount'],
         sender_pk=order_data['sender_pk'],
-        receiver_pk=order_data['receiver_pk']
+        receiver_pk=order_data['receiver_pk'],
+        ratio=sell_amount/buy_amount
     )
     session.add(new_order)
     session.commit()
@@ -26,7 +27,8 @@ def process_order(order_data):
         Order.filled.is_(None),
         Order.buy_currency == order_data['sell_currency'],
         Order.sell_currency == order_data['buy_currency'],
-        (Order.sell_amount * order_data['sell_amount']) >= (Order.buy_amount * order_data['buy_amount'])
+        order_data['ratio']>= Order.buy_amount/Order.sell_amount,
+        #(Order.sell_amount * order_data['sell_amount']) >= (Order.buy_amount * order_data['buy_amount'])
     ).all()
     session.commit()
 
@@ -72,7 +74,7 @@ def process_order(order_data):
             new_order.counterparty_id = existing_order.id
 
             # Create a child order for the remaining balance
-            child_sell_amount = (order_data['buy_amount'] - existing_order.sell_amount)* (order_data['sell_amount']/order_data['buy_amount'] )
+            child_sell_amount = (order_data['buy_amount'] - existing_order.sell_amount)* (order_data['sell_amount']/order_data['buy_amount'])
 
             child_order = Order(
                 buy_currency=order_data['buy_currency'],
