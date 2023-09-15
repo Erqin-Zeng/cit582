@@ -19,6 +19,7 @@ def process_order(order_data):
         receiver_pk=order_data['receiver_pk']
     )
     session.add(new_order)
+    session.commit()
 
     # Step 2: Match existing orders and create child orders if needed
     matching_orders = session.query(Order).filter(
@@ -27,6 +28,7 @@ def process_order(order_data):
         Order.sell_currency == order_data['buy_currency'],
         (Order.sell_amount * order_data['sell_amount']) >= (Order.buy_amount * order_data['buy_amount'])
     ).all()
+    session.commit()
 
     for existing_order in matching_orders:
         if existing_order.sell_amount == order_data['buy_amount']:
@@ -35,6 +37,8 @@ def process_order(order_data):
             new_order.filled = datetime.now()
             existing_order.counterparty_id = new_order.id
             new_order.counterparty_id = existing_order.id
+            session.commit()
+            break
 
         elif existing_order.sell_amount > order_data['buy_amount']:
             # Existing order partially filled, create child order
@@ -58,6 +62,10 @@ def process_order(order_data):
                 )
                 child_order.creator_id = existing_order.id  # Set the creator of the child order
                 session.add(child_order)
+                session.commit()
+                break
+            session.commit()
+            break
 
     # Commit changes to the database
     session.commit()
