@@ -26,7 +26,6 @@ def process_order(order_data):
         Order.filled.is_(None),
         Order.buy_currency == order_data['sell_currency'],
         Order.sell_currency == order_data['buy_currency'],
-        order_data['ratio']>= Order.buy_amount/Order.sell_amount,
         (Order.sell_amount * order_data['sell_amount']) >= (Order.buy_amount * order_data['buy_amount'])
     ).all()
     session.commit()
