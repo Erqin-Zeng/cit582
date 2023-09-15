@@ -17,7 +17,6 @@ def process_order(order_data):
         sell_amount=order_data['sell_amount'],
         sender_pk=order_data['sender_pk'],
         receiver_pk=order_data['receiver_pk'],
-        ratio=order_data['sell_amount']/order_data['buy_amount']
     )
     session.add(new_order)
     session.commit()
@@ -28,7 +27,7 @@ def process_order(order_data):
         Order.buy_currency == order_data['sell_currency'],
         Order.sell_currency == order_data['buy_currency'],
         order_data['ratio']>= Order.buy_amount/Order.sell_amount,
-        #(Order.sell_amount * order_data['sell_amount']) >= (Order.buy_amount * order_data['buy_amount'])
+        (Order.sell_amount * order_data['sell_amount']) >= (Order.buy_amount * order_data['buy_amount'])
     ).all()
     session.commit()
 
