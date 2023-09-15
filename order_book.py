@@ -8,17 +8,6 @@ Base.metadata.bind = engine
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-from datetime import datetime
-
-from models import Base, Order
-engine = create_engine('sqlite:///orders.db')
-Base.metadata.bind = engine
-DBSession = sessionmaker(bind=engine)
-session = DBSession()
-
-
 def process_order(order_data):
     # Step 1: Insert the new order into the database
     new_order = Order(
