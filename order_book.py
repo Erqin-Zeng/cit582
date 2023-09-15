@@ -17,7 +17,7 @@ def process_order(order_data):
         sell_amount=order_data['sell_amount'],
         sender_pk=order_data['sender_pk'],
         receiver_pk=order_data['receiver_pk'],
-        ratio=sell_amount/buy_amount
+        ratio=order_data['sell_amount']/order_data['buy_amount']
     )
     session.add(new_order)
     session.commit()
