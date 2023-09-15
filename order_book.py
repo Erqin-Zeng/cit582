@@ -23,7 +23,7 @@ def process_order(order_data):
 
     # Step 2: Match existing orders and create child orders if needed
     matching_orders = session.query(Order).filter(
-        Order.filled.is_(None),
+        Order.filled.is None # _(None),
         Order.buy_currency == order_data['sell_currency'],
         Order.sell_currency == order_data['buy_currency'],
         (Order.sell_amount * order_data['sell_amount']) >= (Order.buy_amount * order_data['buy_amount'])
