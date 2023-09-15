@@ -83,7 +83,7 @@ def process_order(order_data):
                 receiver_pk=order_data['receiver_pk']
             )
 
-            child_order.creator_id = order_data['id']  # Set the creator of the child order
+            child_order.creator_id = new_order.id  # Set the creator of the child order
             session.add(child_order)
             session.commit()
             break
