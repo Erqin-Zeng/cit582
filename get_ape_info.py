@@ -38,13 +38,13 @@ def get_ape_info(apeID):
         tokenURI = tokenURI.replace('ipfs://', 'https://gateway.pinata.cloud/ipfs/')
 
         data['image'] = tokenURI
-        data['eyes'] = ipfs_data['eyes']
-
+        
         # Fetch additional data from IPFS if needed
-        '''response = requests.get(tokenURI)
+        response = requests.get(tokenURI)
         if response.status_code == 200:
             ipfs_data = response.json()
-            if 'eyes' in ipfs_data:'''
+            if 'eyes' in ipfs_data:
+              data['eyes'] = ipfs_data['eyes']
                 
 
     except Exception as e:
