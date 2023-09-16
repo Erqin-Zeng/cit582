@@ -47,7 +47,7 @@ def get_ape_info(apeID):
           attributes = ipfs_data['attributes']
           for attribute in attributes:
             if 'trait_type' in attribute and attribute['trait_type'] == 'Eyes':
-              data['eyes'] = str(attribute['value'])
+              data['eyes'] = attribute['value']
               break
             else:
               data['eyes'] = None
@@ -67,7 +67,7 @@ def get_ape_info(apeID):
     print("'eyes':", data['eyes'])
     data['owner'] = str(data['owner'])
     data['image'] = str(data['image'])
-    #data['eyes'] = str(data['eyes'])
+    data['eyes'] = str(data['eyes'])
 
     return data
   
