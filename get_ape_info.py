@@ -20,7 +20,7 @@ web3 = Web3(provider)
 # Create a contract instance
 contract = web3.eth.contract(address=contract_address, abi=abi)
 
-  def get_ape_info(apeID):
+def get_ape_info(apeID):
     assert isinstance(apeID, int), f"{apeID} is not an int"
     assert 1 <= apeID <= 10000, f"{apeID} must be between 1 and 10,000"
 
