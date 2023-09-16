@@ -42,10 +42,11 @@ def get_ape_info(apeID):
         # Fetch additional data from IPFS if needed
         response = requests.get(tokenURI)
         if response.status_code == 200:
-          print("here")
+          print("here1")
           ipfs_data = response.json()
           if 'Eyes' in ipfs_data:
             print("here2")
+            print("'eyes':", ipfs_data['Eyes'])
             data['eyes'] = ipfs_data['Eyes']
             print("here3")
 
