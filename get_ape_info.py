@@ -31,6 +31,7 @@ def get_ape_info(apeID):
 
     try:
         ipfs_data = requests.get(f"https://gateway.pinata.cloud/ipfs/QmeSjSinHpPnmXmspMjwiXyN6zS4E9zccariGR3jxcaWtq/{apeID}").json()
+        print(f"IPFS Data for Ape {apeID}: {ipfs_data}") 
     except Exception as e:
         print(f"Error fetching data for Ape {apeID}: {e}")
 
