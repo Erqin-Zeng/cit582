@@ -33,10 +33,13 @@ def get_ape_info(apeID):
 
         # Get the tokenURI
         tokenURI = contract.functions.tokenURI(apeID).call()
+        
+        # Replace 'ipfs://' with the IPFS gateway URL
+        tokenURI = tokenURI.replace('ipfs://', 'https://gateway.pinata.cloud/ipfs/')
+
         data['image'] = tokenURI
 
         # Fetch additional data from IPFS if needed
-        # Example: Use the requests library to get data from the IPFS gateway
         response = requests.get(tokenURI)
         if response.status_code == 200:
             ipfs_data = response.json()
@@ -50,3 +53,4 @@ def get_ape_info(apeID):
     assert all([a in data.keys() for a in ['owner', 'image', 'eyes']]), f"Return value should include the keys 'owner', 'image', and 'eyes'"
 
     return data
+
