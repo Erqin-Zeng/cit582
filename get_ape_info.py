@@ -48,6 +48,7 @@ def get_ape_info(apeID):
           for key in ipfs_data.keys(): 
             print(key)
         if 'attributes' in ipfs_data:
+          print("here2")
           attributes = ipfs_data['attributes']
           for attribute in attributes:
             if 'trait_type' in attribute and attribute['trait_type'] == 'Eyes':
