@@ -44,7 +44,7 @@ def get_ape_info(apeID):
         if response.status_code == 200:
             print("here")
             ipfs_data = response.json()
-            if 'Eyes' in ipfs_data:
+            if 'eyes' in ipfs_data:
                 print("here2")
                 data['eyes'] = ipfs_data['Eyes']
 
