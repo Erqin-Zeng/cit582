@@ -45,10 +45,12 @@ def get_ape_info(apeID):
           print("here1")
           ipfs_data = response.json()
           print("here2",ipfs_data)
+          for key in ipfs_data.keys(): 
+            print(key)
           if 'Eyes' in ipfs_data:
             print("here2")
             print("'eyes':", ipfs_data['Eyes'])
-            for key in ipfs_data.keys(): print(key)
+
             data['eyes'] = ipfs_data['Eyes']
             print("here3")
 
