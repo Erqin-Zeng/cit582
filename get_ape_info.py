@@ -47,12 +47,16 @@ def get_ape_info(apeID):
           print("here2",ipfs_data)
           for key in ipfs_data.keys(): 
             print(key)
-          if 'Eyes' in ipfs_data:
-            print("here2")
-            print("'eyes':", ipfs_data['Eyes'])
-
-            data['eyes'] = ipfs_data['Eyes']
-            print("here3")
+        if 'attributes' in ipfs_data:
+          attributes = ipfs_data['attributes']
+          for attribute in attributes:
+          if 'trait_type' in attribute and attribute['trait_type'] == 'Eyes':
+            eyes_value = attribute['value']
+            break
+          else:
+            eyes_value = None
+        else:
+          eyes_value = None
 
     except Exception as e:
         print(f"Error fetching data for Ape {apeID}: {str(e)}")
