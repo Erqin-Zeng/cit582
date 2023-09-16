@@ -43,10 +43,10 @@ def get_ape_info(apeID):
     assert all([a in data.keys() for a in ['owner', 'image', 'eyes']]), f"Return value should include the keys 'owner', 'image', and 'eyes'"
     
     # Print the result
-    print(f"Ape {apeID} Info:,")
+    print(f"Ape {apeID} Info:")
     print("'owner':", data['owner'],)
-    print("'image':", data['image'])
-    print("'eyes':", data['eyes'])
+    print("'image':", data['image'],)
+    print("'Eyes':", data['eyes'])
     return data
 
 
