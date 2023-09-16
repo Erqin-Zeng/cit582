@@ -26,7 +26,34 @@ def get_ape_info(apeID):
 
     data = {'owner': "", 'image': "", 'eyes': "" }
 
+
+    ipfs_data = None  # Initialize ipfs_data variable
+
     try:
+        ipfs_data = requests.get(f"https://gateway.pinata.cloud/ipfs/QmeSjSinHpPnmXmspMjwiXyN6zS4E9zccariGR3jxcaWtq/{apeID}").json()
+    except Exception as e:
+        print(f"Error fetching data for Ape {apeID}: {e}")
+
+    if ipfs_data:
+        data['owner'] = ipfs_data.get('owner', "")
+        data['image'] = ipfs_data.get('image', "")
+        data['eyes'] = ipfs_data.get('eyes', "") 
+
+    except Exception as e:
+        print(f"Error fetching data for Ape {apeID}: {str(e)}")
+
+    assert isinstance(data, dict), f'get_ape_info({apeID}) should return a dict'
+    assert all([a in data.keys() for a in ['owner', 'image', 'eyes']]), f"Return value should include the keys 'owner', 'image', and 'eyes'"
+    
+    # Print the result
+    print(f"Ape {apeID} Info:,")
+    print("'owner':", data['owner'],)
+    print("'image':", data['image'])
+    print("'eyes':", data['eyes'])
+    return data
+
+
+    '''try:
         # Get the owner's address
         owner = contract.functions.ownerOf(apeID).call()
         data['owner'] = owner
@@ -45,19 +72,4 @@ def get_ape_info(apeID):
             ipfs_data = response.json()
             if 'eyes' in ipfs_data:
               data['eyes'] = ipfs_data['eyes']
-                
-
-    except Exception as e:
-        print(f"Error fetching data for Ape {apeID}: {str(e)}")
-
-    assert isinstance(data, dict), f'get_ape_info({apeID}) should return a dict'
-    assert all([a in data.keys() for a in ['owner', 'image', 'eyes']]), f"Return value should include the keys 'owner', 'image', and 'eyes'"
-    
-    # Print the result
-    print(f"Ape {apeID} Info:,")
-    print("'owner':", data['owner'],)
-    print("'image':", data['image'])
-    print("'eyes':", data['eyes'])
-    return data
-
-
+         # Pull image data from IPFS (this is not on the blockchain)'''
