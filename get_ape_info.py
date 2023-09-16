@@ -20,35 +20,45 @@ web3 = Web3(provider)
 # Create a contract instance
 contract = web3.eth.contract(address=contract_address, abi=abi)
 
-def get_ape_info(apeID):
+  def get_ape_info(apeID):
     assert isinstance(apeID, int), f"{apeID} is not an int"
     assert 1 <= apeID <= 10000, f"{apeID} must be between 1 and 10,000"
 
     data = {'owner': "", 'image': "", 'eyes': "" }
 
-
-    ipfs_data = None  # Initialize ipfs_data variable
-
     try:
-        ipfs_data = requests.get(f"https://gateway.pinata.cloud/ipfs/QmeSjSinHpPnmXmspMjwiXyN6zS4E9zccariGR3jxcaWtq/{apeID}").json()
-        print(f"IPFS Data for Ape {apeID}: {ipfs_data}") 
-    except Exception as e:
-        print(f"Error fetching data for Ape {apeID}: {e}")
+        # Get the owner's address
+        owner = contract.functions.ownerOf(apeID).call()
+        data['owner'] = owner
 
-    if ipfs_data:
-        data['owner'] = ipfs_data.get('owner', "")
-        data['image'] = ipfs_data.get('image', "")
-        data['eyes'] = ipfs_data.get('eyes', "") 
-      
+        # Get the tokenURI
+        tokenURI = contract.functions.tokenURI(apeID).call()
+        
+        # Replace 'ipfs://' with the IPFS gateway URL
+        tokenURI = tokenURI.replace('ipfs://', 'https://gateway.pinata.cloud/ipfs/')
+
+        data['image'] = tokenURI
+
+        # Fetch additional data from IPFS if needed
+        response = requests.get(tokenURI)
+        if response.status_code == 200:
+            ipfs_data = response.json()
+            if 'Eyes' in ipfs_data:
+                data['eyes'] = ipfs_data['Eyes']
+
+    except Exception as e:
+        print(f"Error fetching data for Ape {apeID}: {str(e)}")
+
     assert isinstance(data, dict), f'get_ape_info({apeID}) should return a dict'
     assert all([a in data.keys() for a in ['owner', 'image', 'eyes']]), f"Return value should include the keys 'owner', 'image', and 'eyes'"
-    
+
     # Print the result
     print(f"Ape {apeID} Info:")
     print("'owner':", data['owner'],)
     print("'image':", data['image'],)
     print("'eyes':", data['eyes'])
-    return data
+
+
 
 
     '''try:
