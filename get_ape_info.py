@@ -66,4 +66,5 @@ def get_ape_info(apeID):
     print("'image':", data['image'],)
     print("'eyes':", data['eyes'])
     return data
-  get_ape_info(1)
+  
+get_ape_info(1)
