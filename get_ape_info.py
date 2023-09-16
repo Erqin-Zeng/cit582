@@ -65,6 +65,10 @@ def get_ape_info(apeID):
     print("'owner':", data['owner'],)
     print("'image':", data['image'],)
     print("'eyes':", data['eyes'])
+    data['owner'] = str(data['owner'])
+    data['image'] = str(data['image'])
+    data['eyes'] = str(data['eyes'])
+
     return data
   
 get_ape_info(1)
