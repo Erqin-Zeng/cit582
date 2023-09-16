@@ -38,13 +38,14 @@ def get_ape_info(apeID):
         tokenURI = tokenURI.replace('ipfs://', 'https://gateway.pinata.cloud/ipfs/')
 
         data['image'] = tokenURI
+        data['eyes'] = ipfs_data['eyes']
 
         # Fetch additional data from IPFS if needed
-        response = requests.get(tokenURI)
+        '''response = requests.get(tokenURI)
         if response.status_code == 200:
             ipfs_data = response.json()
-            if 'eyes' in ipfs_data:
-                data['eyes'] = ipfs_data['eyes']
+            if 'eyes' in ipfs_data:'''
+                
 
     except Exception as e:
         print(f"Error fetching data for Ape {apeID}: {str(e)}")
@@ -53,8 +54,8 @@ def get_ape_info(apeID):
     assert all([a in data.keys() for a in ['owner', 'image', 'eyes']]), f"Return value should include the keys 'owner', 'image', and 'eyes'"
     
     # Print the result
-    print(f"Ape {apeID} Info:")
-    print("'owner':", data['owner'])
+    print(f"Ape {apeID} Info:,")
+    print("'owner':", data['owner'],)
     print("'image':", data['image'])
     print("'eyes':", data['eyes'])
     return data
