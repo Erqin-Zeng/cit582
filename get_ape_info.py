@@ -43,9 +43,7 @@ def get_ape_info(apeID):
         response = requests.get(tokenURI)
         if response.status_code == 200:
           ipfs_data = response.json()
-          print("here1",ipfs_data)
         if 'attributes' in ipfs_data:
-          print("here2")
           attributes = ipfs_data['attributes']
           for attribute in attributes:
             if 'trait_type' in attribute and attribute['trait_type'] == 'Eyes':
