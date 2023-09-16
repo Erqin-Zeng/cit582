@@ -42,17 +42,14 @@ def get_ape_info(apeID):
         # Fetch additional data from IPFS if needed
         response = requests.get(tokenURI)
         if response.status_code == 200:
-          print("here1")
           ipfs_data = response.json()
-          print("here2",ipfs_data)
-          for key in ipfs_data.keys(): 
-            print(key)
+          print("here1",ipfs_data)
         if 'attributes' in ipfs_data:
           print("here2")
           attributes = ipfs_data['attributes']
-          for key in attributes.keys():
-            if 'trait_type' in key and attribute['trait_type'] == 'Eyes':
-              data['eyes'] = key['value']
+          for attribute in attributes:
+            if 'trait_type' in attribute and attribute['trait_type'] == 'Eyes':
+              data['eyes'] = attribute['value']
               break
             else:
               data['eyes'] = None
