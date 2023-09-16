@@ -57,27 +57,3 @@ contract = web3.eth.contract(address=contract_address, abi=abi)
     print("'owner':", data['owner'],)
     print("'image':", data['image'],)
     print("'eyes':", data['eyes'])
-
-
-
-
-    '''try:
-        # Get the owner's address
-        owner = contract.functions.ownerOf(apeID).call()
-        data['owner'] = owner
-
-        # Get the tokenURI
-        tokenURI = contract.functions.tokenURI(apeID).call()
-        
-        # Replace 'ipfs://' with the IPFS gateway URL
-        tokenURI = tokenURI.replace('ipfs://', 'https://gateway.pinata.cloud/ipfs/')
-
-        data['image'] = tokenURI
-        
-        # Fetch additional data from IPFS if needed
-        response = requests.get(tokenURI)
-        if response.status_code == 200:
-            ipfs_data = response.json()
-            if 'eyes' in ipfs_data:
-              data['eyes'] = ipfs_data['eyes']
-         # Pull image data from IPFS (this is not on the blockchain)'''
