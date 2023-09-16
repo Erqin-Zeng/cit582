@@ -48,6 +48,7 @@ def get_ape_info(apeID):
           if 'Eyes' in ipfs_data:
             print("here2")
             print("'eyes':", ipfs_data['Eyes'])
+            for key in ipfs_data.keys(): print(key)
             data['eyes'] = ipfs_data['Eyes']
             print("here3")
 
