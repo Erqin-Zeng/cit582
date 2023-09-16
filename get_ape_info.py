@@ -24,7 +24,7 @@ def get_ape_info(apeID):
     assert isinstance(apeID, int), f"{apeID} is not an int"
     assert 1 <= apeID <= 10000, f"{apeID} must be between 1 and 10,000"
 
-    data = {'owner': "", 'image': "", 'eyes': "" }
+    data = {'owner': "", 'image': "", 'Eyes': "" }
 
 
     ipfs_data = None  # Initialize ipfs_data variable
