@@ -24,7 +24,7 @@ def get_ape_info(apeID):
     assert isinstance(apeID, int), f"{apeID} is not an int"
     assert 1 <= apeID <= 10000, f"{apeID} must be between 1 and 10,000"
 
-    data = {'owner': "", 'image': "", 'Eyes': "" }
+    data = {'owner': "", 'image': "", 'eyes': "" }
 
 
     ipfs_data = None  # Initialize ipfs_data variable
@@ -37,7 +37,7 @@ def get_ape_info(apeID):
     if ipfs_data:
         data['owner'] = ipfs_data.get('owner', "")
         data['image'] = ipfs_data.get('image', "")
-        data['Eyes'] = ipfs_data.get('Eyes', "") 
+        data['eyes'] = ipfs_data.get('Eyes', "") 
       
     assert isinstance(data, dict), f'get_ape_info({apeID}) should return a dict'
     assert all([a in data.keys() for a in ['owner', 'image', 'eyes']]), f"Return value should include the keys 'owner', 'image', and 'eyes'"
@@ -46,7 +46,7 @@ def get_ape_info(apeID):
     print(f"Ape {apeID} Info:")
     print("'owner':", data['owner'],)
     print("'image':", data['image'],)
-    print("'Eyes':", data['Eyes'])
+    print("'eyes':", data['eyes'])
     return data
 
 
