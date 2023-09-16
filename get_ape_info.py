@@ -38,7 +38,7 @@ def get_ape_info(apeID):
     if ipfs_data:
         data['owner'] = ipfs_data.get('owner', "")
         data['image'] = ipfs_data.get('image', "")
-        data['eyes'] = ipfs_data.get('Eyes', "") 
+        data['eyes'] = ipfs_data.get('eyes', "") 
       
     assert isinstance(data, dict), f'get_ape_info({apeID}) should return a dict'
     assert all([a in data.keys() for a in ['owner', 'image', 'eyes']]), f"Return value should include the keys 'owner', 'image', and 'eyes'"
