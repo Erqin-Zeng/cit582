@@ -44,9 +44,10 @@ def get_ape_info(apeID):
         if response.status_code == 200:
             print("here")
             ipfs_data = response.json()
-            if 'Mouth' in ipfs_data:
-                print("here2")
+            #if 'Mouth' in ipfs_data:
+                
                 data['eyes'] = ipfs_data['Eyes']
+                print("here2")
 
     except Exception as e:
         print(f"Error fetching data for Ape {apeID}: {str(e)}")
