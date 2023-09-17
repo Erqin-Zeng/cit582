@@ -25,8 +25,11 @@ def ZK_equality(G, H):
         stmt1 = DLRep(C2, r1 * H) 
         stmt2 = DLRep(D2, r2 * H) 
 
+    # Generate a non-interactive zero-knowledge proof for the equality of stmt1 and stmt2
+    proof_equal_stmts = AndProofStmt(stmt1, stmt2)
+
     # Generate a non-interactive zero-knowledge proof for the statement
-    zk_proof = stmt1.prove() & stmt2.prove()
+    zk_proof = proof_equal_stmts.prove()
 
     # Return the elliptic curve points C1, C2, D1, D2, and the proof
     return C1, C2, D1, D2, zk_proof
