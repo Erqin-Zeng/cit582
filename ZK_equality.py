@@ -19,11 +19,11 @@ def ZK_equality(G, H):
 
     # Define the proof statement for both scenarios (m=0 and m=1)
     if m==1:
-        stmt1 = DLRep(C1, r1 * H, simulated=True) | DLRep(C1 - G, r1 * H)
-        stmt2 = DLRep(D1, r2 * H, simulated=True) | DLRep(D1 - G, r2 * H)
+        stmt1 = DLRep(C2, r1 * H, simulated=True) | DLRep((C2 - G), r1 * H)
+        stmt2 = DLRep(D2, r2 * H, simulated=True) | DLRep(D1 - G, r2 * H)
     else: # m=0
-        stmt1 = DLRep(C1, r1 * H) | DLRep(C1 - G, r1 * H,simulated=True)
-        stmt2 = DLRep(D1, r2 * H) | DLRep(D1 - G, r2 * H,simulated=True)
+        stmt1 = DLRep(C2, r1 * H) | DLRep(C2 - G, r1 * H,simulated=True)
+        stmt2 = DLRep(D2, r2 * H) | DLRep(D2 - G, r2 * H,simulated=True)
 
     # Generate a non-interactive zero-knowledge proof for the statement
     zk_proof = stmt1.prove() & stmt2.prove()
