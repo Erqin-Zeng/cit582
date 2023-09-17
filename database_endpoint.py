@@ -137,5 +137,8 @@ def order_book():
 #api.add_resource(Trade, '/trade')
 #api.add_resource(OrderBook, '/order_book')
 
+#if __name__ == '__main__':
+    #app.run(port='5002')
 if __name__ == '__main__':
-    app.run(port='5002')
+    app.run(host='0.0.0.0', port=5002)
+
