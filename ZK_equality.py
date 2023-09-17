@@ -1,6 +1,5 @@
 from zksk import Secret, DLRep
 from zksk import utils
-from zksk.composition import AndProofStmt
 
 def parse_hex_point(hex_point_str):
     # Parse a hexadecimal string into an elliptic curve point
@@ -11,10 +10,11 @@ def parse_hex_point(hex_point_str):
 
 def ZK_equality(G, H):
     print(G)
-    print(H)
+    print("The type is : ",type(G)
+    #print(H)
     # Parse G and H from hexadecimal strings
-    G = parse_hex_point(G)
-    H = parse_hex_point(H)
+    #G = parse_hex_point(G)
+    #H = parse_hex_point(H)
 
 
     # Generate two random secrets r1 and r2
