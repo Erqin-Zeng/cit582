@@ -14,9 +14,6 @@ DBSession = sessionmaker(bind=engine)
 
 app = Flask(__name__)
 
-#api = Api(app)
-#app.url_map.strict_slashes = False
-
 # These decorators allow you to use g.session to access the database inside the request code
 @app.before_request
 def create_session():
@@ -137,12 +134,6 @@ def order_book():
     except Exception as e:
         return jsonify({"error": str(e)})
 
-
-#api.add_resource(Trade, '/trade')
-#api.add_resource(OrderBook, '/order_book')
-
-#if __name__ == '__main__':
-    #app.run(port='5002')
 if __name__ == '__main__':
-    app.run(host='127.0.0.1', port=5002)
+    app.run(port='5002')
 
