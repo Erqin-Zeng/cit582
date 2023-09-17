@@ -38,54 +38,76 @@ def log_message(d):
         print(f"Error logging message: {str(e)}")
 
 # Trade endpoint
-class Trade(Resource):
-    def post(self):
+@app.route('/trade', methods=['POST'])
+def trade():
+    if request.method == "POST":
+        content = request.get_json(silent=True)
+        print(f"content = {json.dumps(content)}")
+        columns = ["sender_pk", "receiver_pk", "buy_currency", "sell_currency", "buy_amount", "sell_amount", "platform"]
+        fields = ["sig", "payload"]
+        error = False
+        for field in fields:
+            if field not in content:
+                print(f"{field} not received by Trade")
+                print(json.dumps(content))
+                log_message(content)
+                return jsonify(False)
+
+        error = False
+        if "payload" in content:
+            payload = content["payload"]
+            for column in columns:
+                if column not in payload:
+                    print(f"{column} not received by Trade")
+                    error = True
+
+        if error:
+            print(json.dumps(content))
+            log_message(content)
+            return jsonify(False)
+
         try:
-            content = request.get_json()
-            payload = content.get('payload')
-            sig = content.get('sig')
+            sender_pk = payload['sender_pk']
+            platform = payload['platform']
 
-            if payload and sig:
-                sender_pk = payload.get('sender_pk')
-                platform = payload.get('platform')
+            if sender_pk and platform in ['Algorand', 'Ethereum']:
+                sig = content['sig']
 
-                if sender_pk and platform in ['Algorand', 'Ethereum']:
-                    # Check if the signature is valid
-                    if platform == 'Algorand':
-                        algo_sig_str = sig
-                        if not algosdk.util.verify_bytes(json.dumps(payload).encode('utf-8'), algo_sig_str, sender_pk):
-                            log_message(payload)
-                            return jsonify(False)
+                # Check if the signature is valid
+                if platform == 'Algorand':
+                    algo_sig_str = sig
+                    if not algosdk.util.verify_bytes(json.dumps(payload).encode('utf-8'), algo_sig_str, sender_pk):
+                        log_message(payload)
+                        return jsonify(False)
 
-                    elif platform == 'Ethereum':
-                        eth_sig_obj = sig
-                        eth_encoded_msg = encode_defunct(text=json.dumps(payload))
-                        if sender_pk != eth_account.Account.recover_message(eth_encoded_msg, signature=eth_sig_obj):
-                            log_message(payload)
-                            return jsonify(False)
+                elif platform == 'Ethereum':
+                    eth_sig_obj = sig
+                    eth_encoded_msg = encode_defunct(text=json.dumps(payload))
+                    if sender_pk != eth_account.Account.recover_message(eth_encoded_msg, signature=eth_sig_obj):
+                        log_message(payload)
+                        return jsonify(False)
 
-                    # If the signature is valid, insert the order into the Order table
-                    order = Order(
-                        sender_pk=payload['sender_pk'],
-                        receiver_pk=payload['receiver_pk'],
-                        buy_currency=payload['buy_currency'],
-                        sell_currency=payload['sell_currency'],
-                        buy_amount=payload['buy_amount'],
-                        sell_amount=payload['sell_amount'],
-                        signature=sig
-                    )
+                # If the signature is valid, insert the order into the Order table
+                order = Order(
+                    sender_pk=sender_pk,
+                    receiver_pk=payload['receiver_pk'],
+                    buy_currency=payload['buy_currency'],
+                    sell_currency=payload['sell_currency'],
+                    buy_amount=payload['buy_amount'],
+                    sell_amount=payload['sell_amount'],
+                    signature=sig
+                )
 
-                    g.session.add(order)
-                    g.session.commit()
-                    return jsonify(True)
-                else:
-                    log_message(payload)
-                    return jsonify(False)
+                g.session.add(order)
+                g.session.commit()
+                return jsonify(True)
             else:
+                log_message(payload)
                 return jsonify(False)
         except Exception as e:
             print(f"Error processing trade request: {str(e)}")
             return jsonify(False)
+
 
 # Order book endpoint
 class OrderBook(Resource):
