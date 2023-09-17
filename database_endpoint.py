@@ -6,7 +6,6 @@ from eth_account.messages import encode_defunct
 import json
 import eth_account
 import algosdk
-from models import Base, Order, Log
 
 from models import Base, Order, Log
 engine = create_engine('sqlite:///orders.db')
