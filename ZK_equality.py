@@ -1,15 +1,9 @@
 from zksk import Secret, DLRep
 from zksk import utils
-from petlib.ec import EcGroup, EcPt
+from petlib.ec import EcPt
 
 def ZK_equality(G, H):
     
-    group = EcGroup()
-    # Convert G and H to EcPt objects using the specified group
-    G = EcPt.from_binary(G, group)
-    H = EcPt.from_binary(H, group)
-
-
     # Generate two random secrets r1 and r2
     r1 = Secret(utils.get_random_num(bits=128))
     r2 = Secret(utils.get_random_num(bits=128))
@@ -32,9 +26,7 @@ def ZK_equality(G, H):
     zk_proof = stmt.prove()
     
     # Return the elliptic curve points C1, C2, D1, D2, and the proof
-    #return (C1, C2), (D1, D2), zk_proof
-    return (C1.export(), C2.export()), (D1.export(), D2.export()), zk_proof
-
+    return return C1, C2, D1, D2, zk_proof
 
     '''if m==1:
         stmt1 = DLRep(C2, r1 * H, simulated=True) | DLRep((C2 - G), r1 * H)
