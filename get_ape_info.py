@@ -53,8 +53,7 @@ def get_ape_info(apeID):
                         break
             else:
                 break
-        else:
-            break
+
 
     except Exception as e:
         print(f"Error fetching data for Ape {apeID}: {str(e)}")
