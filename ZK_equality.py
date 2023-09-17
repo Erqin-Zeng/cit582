@@ -4,8 +4,6 @@ from zksk.composition import AndProofStmt
 
 def ZK_equality(G, H):
 
-    G, H = utils.make_generators(num=2, seed=42)
-    
     # Generate two random secrets r1 and r2
     r1 = Secret(utils.get_random_num(bits=128))
     r2 = Secret(utils.get_random_num(bits=128))
