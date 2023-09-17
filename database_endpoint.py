@@ -15,8 +15,8 @@ DBSession = sessionmaker(bind=engine)
 
 app = Flask(__name__)
 
-#api = Api(app)
-#app.url_map.strict_slashes = False
+api = Api(app)
+app.url_map.strict_slashes = False
 
 # These decorators allow you to use g.session to access the database inside the request code
 @app.before_request
@@ -110,27 +110,26 @@ def trade():
 
 
 # Order book endpoint
-class OrderBook(Resource):
-    def get(self):
-        try:
-            orders = g.session.query(Order).all()
-            order_list = []
-            for order in orders:
-                order_dict = {
-                    'sender_pk': order.sender_pk,
-                    'receiver_pk': order.receiver_pk,
-                    'buy_currency': order.buy_currency,
-                    'sell_currency': order.sell_currency,
-                    'buy_amount': order.buy_amount,
-                    'sell_amount': order.sell_amount,
-                    'signature': order.signature
-                }
-                order_list.append(order_dict)
+@app.route('/order_book')
+def order_book():
+    # Your code here
+    # Note that you can access the database session using g.session
+    orders = g.session.query(Order).all()
+    order_list = []
 
-            return jsonify({'data': order_list})
-        except Exception as e:
-            print(f"Error fetching order book: {str(e)}")
-            return jsonify({'data': []})
+    for order in orders:
+        order_dict = {
+            "sender_pk": order.sender_pk,
+            "receiver_pk": order.receiver_pk,
+            "buy_currency": order.buy_currency,
+            "sell_currency": order.sell_currency,
+            "buy_amount": order.buy_amount,
+            "sell_amount": order.sell_amount,
+            "signature": order.signature
+        }
+        order_list.append(order_dict)
+
+    return jsonify({"data": order_list})
 
 api.add_resource(Trade, '/trade')
 api.add_resource(OrderBook, '/order_book')
