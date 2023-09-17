@@ -6,6 +6,7 @@ from eth_account.messages import encode_defunct
 import json
 import eth_account
 import algosdk
+import requests
 
 from models import Base, Order, Log
 engine = create_engine('sqlite:///orders.db')
@@ -76,21 +77,24 @@ def trade():
         fields = ["sig", "payload"]
         error = False
         for field in fields:
-            if not field in content.keys():
-                print( f"{field} not received by Trade" )
-                print( json.dumps(content) )
+            if not field in content:
+                print(f"{field} not received by Trade")
+                print(json.dumps(content))
                 log_message(content)
-                return jsonify( False )
+                return jsonify(False)
 
         error = False
-        for column in columns:
-            if not column in content['payload'].keys():
-                print( f"{column} not received by Trade" )
-                error = True
+        if "payload" in content:
+            payload = content["payload"]
+            for column in columns:
+                if column not in payload:
+                    print(f"{column} not received by Trade")
+                    error = True
+
         if error:
-            print( json.dumps(content) )
+            print(json.dumps(content))
             log_message(content)
-            return jsonify( False )
+            return jsonify(False)
 
         try:
             sender_pk = payload['sender_pk']
@@ -99,40 +103,38 @@ def trade():
             if sender_pk and platform in ['Algorand', 'Ethereum']:
                 sig = content['sig']
 
-                # Check if the signature is valid
-                if platform == 'Algorand':
-                    algo_sig_str = sig
-                    if not algosdk.util.verify_bytes(json.dumps(payload).encode('utf-8'), algo_sig_str, sender_pk):
-                        log_message(payload)
-                        return jsonify(False)
+                # Check if the signature is valid using the /verify endpoint
+                verify_payload = {
+                    "sig": sig,
+                    "payload": payload
+                }
+                response = requests.post("http://localhost:5002/verify", json=verify_payload)
 
-                elif platform == 'Ethereum':
-                    eth_sig_obj = sig
-                    eth_encoded_msg = encode_defunct(text=json.dumps(payload))
-                    if sender_pk != eth_account.Account.recover_message(eth_encoded_msg, signature=eth_sig_obj):
-                        log_message(payload)
-                        return jsonify(False)
+                if response.status_code == 200 and response.json():
+                    # If the signature is valid, insert the order into the Order table
+                    order = Order(
+                        sender_pk=sender_pk,
+                        receiver_pk=payload['receiver_pk'],
+                        buy_currency=payload['buy_currency'],
+                        sell_currency=payload['sell_currency'],
+                        buy_amount=payload['buy_amount'],
+                        sell_amount=payload['sell_amount'],
+                        signature=sig
+                    )
 
-                # If the signature is valid, insert the order into the Order table
-                order = Order(
-                    sender_pk=sender_pk,
-                    receiver_pk=payload['receiver_pk'],
-                    buy_currency=payload['buy_currency'],
-                    sell_currency=payload['sell_currency'],
-                    buy_amount=payload['buy_amount'],
-                    sell_amount=payload['sell_amount'],
-                    signature=sig
-                )
-
-                g.session.add(order)
-                g.session.commit()
-                return jsonify(True)
+                    g.session.add(order)
+                    g.session.commit()
+                    return jsonify(True)
+                else:
+                    log_message(payload)
+                    return jsonify(False)
             else:
                 log_message(payload)
                 return jsonify(False)
         except Exception as e:
             print(f"Error processing trade request: {str(e)}")
             return jsonify(False)
+
 
 
 # Order book endpoint
