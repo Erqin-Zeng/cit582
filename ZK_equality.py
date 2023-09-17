@@ -26,7 +26,7 @@ def ZK_equality(G, H):
     zk_proof = stmt.prove()
     
     # Return the elliptic curve points C1, C2, D1, D2, and the proof
-    return (C1,C2), (D1,D2), zk_proof
+    return (C1, C2), (D1, D2), zk_proof
 
 
     '''if m==1:
