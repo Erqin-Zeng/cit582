@@ -18,7 +18,7 @@ def ZK_equality(G, H):
     D1 = r2 * G
     D2 = r2 * H + (m * G)
 
-    # Define the proof statement for both scenarios (m=0 and m=1)
+    # Define the proof statement
     stmt = DLRep(C1,r1*G) & DLRep(C2,r1*H+m*G) & DLRep(D1,r2*G) & DLRep(D2,r2*H+m*G)
 
     # Generate a non-interactive zero-knowledge proof for the statement
