@@ -3,6 +3,7 @@ from web3.contract import Contract
 from web3.providers.rpc import HTTPProvider
 import requests
 import json
+import time
 
 bayc_address = "0xBC4CA0EdA7647A8aB7C2061c2E118A18a936f13D"
 contract_address = Web3.to_checksum_address(bayc_address)
