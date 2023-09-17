@@ -1,4 +1,4 @@
-from flask import Flask, request, g
+from flask import Flask, request, g, jsonify
 from flask_restful import Api, Resource
 from sqlalchemy import create_engine, MetaData, Table, Column, String, Integer, JSON, ForeignKey
 from sqlalchemy.orm import sessionmaker, scoped_session
