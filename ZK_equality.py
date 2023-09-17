@@ -13,8 +13,8 @@ def ZK_equality(G, H):
     print(G)
     print(H)
     # Parse G and H from hexadecimal strings
-    G = parse_hex_point(hex_G)
-    H = parse_hex_point(hex_H)
+    G = parse_hex_point(G)
+    H = parse_hex_point(H)
 
 
     # Generate two random secrets r1 and r2
