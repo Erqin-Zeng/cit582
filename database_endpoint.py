@@ -8,16 +8,15 @@ import eth_account
 import algosdk
 from models import Base, Order, Log
 
-app = Flask(__name__)
-api = Api(app)
-app.url_map.strict_slashes = False
-
-# Create an SQLite database engine and bind it to the SQLAlchemy metadata
+from models import Base, Order, Log
 engine = create_engine('sqlite:///orders.db')
 Base.metadata.bind = engine
-
-# Create a session maker for database interactions
 DBSession = sessionmaker(bind=engine)
+
+app = Flask(__name__)
+
+#api = Api(app)
+#app.url_map.strict_slashes = False
 
 # These decorators allow you to use g.session to access the database inside the request code
 @app.before_request
