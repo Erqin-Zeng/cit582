@@ -43,24 +43,21 @@ def trade():
         fields = ["sig", "payload"]
         error = False
         for field in fields:
-            if field not in content:
-                print(f"{field} not received by Trade")
-                print(json.dumps(content))
+            if not field in content.keys():
+                print( f"{field} not received by Trade" )
+                print( json.dumps(content) )
                 log_message(content)
-                return jsonify(False)
+                return jsonify( False )
 
         error = False
-        if "payload" in content:
-            payload = content["payload"]
-            for column in columns:
-                if column not in payload:
-                    print(f"{column} not received by Trade")
-                    error = True
-
+        for column in columns:
+            if not column in content['payload'].keys():
+                print( f"{column} not received by Trade" )
+                error = True
         if error:
-            print(json.dumps(content))
+            print( json.dumps(content) )
             log_message(content)
-            return jsonify(False)
+            return jsonify( False )
 
         try:
             sender_pk = payload['sender_pk']
