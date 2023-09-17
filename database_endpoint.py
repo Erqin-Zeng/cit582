@@ -111,28 +111,32 @@ def trade():
 # Order book endpoint
 @app.route('/order_book')
 def order_book():
-    # Your code here
-    # Note that you can access the database session using g.session
-    orders = g.session.query(Order).all()
-    order_list = []
+    try:
+        # Your code here
+        # Note that you can access the database session using g.session
+        orders = g.session.query(Order).all()
+        order_list = []
 
-    for order in orders:
-        order_dict = {
-            "sender_pk": order.sender_pk,
-            "receiver_pk": order.receiver_pk,
-            "buy_currency": order.buy_currency,
-            "sell_currency": order.sell_currency,
-            "buy_amount": order.buy_amount,
-            "sell_amount": order.sell_amount,
-            "signature": order.signature
-        }
-        order_list.append(order_dict)
+        for order in orders:
+            order_dict = {
+                "sender_pk": order.sender_pk,
+                "receiver_pk": order.receiver_pk,
+                "buy_currency": order.buy_currency,
+                "sell_currency": order.sell_currency,
+                "buy_amount": order.buy_amount,
+                "sell_amount": order.sell_amount,
+                "signature": order.signature
+            }
+            order_list.append(order_dict)
 
-     # Create a result dictionary 
-    result = {"data": order_list}
+        # Create a result dictionary 
+        result = {"data": order_list}
 
-    # Return the result as JSON
-    return jsonify(result)
+        # Return the result as JSON
+        return jsonify(result)
+    except Exception as e:
+        return jsonify({"error": str(e)})
+
 
 #api.add_resource(Trade, '/trade')
 #api.add_resource(OrderBook, '/order_book')
