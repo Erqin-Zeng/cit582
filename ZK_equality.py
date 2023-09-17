@@ -10,7 +10,7 @@ def parse_hex_point(hex_point_str):
 
 def ZK_equality(G, H):
     print(G)
-    print("The type is : ",type(G)
+    print("The type is : ",type(G))
     #print(H)
     # Parse G and H from hexadecimal strings
     #G = parse_hex_point(G)
