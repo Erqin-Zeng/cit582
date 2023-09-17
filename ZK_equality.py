@@ -1,5 +1,6 @@
 from zksk import Secret, DLRep
 from zksk import utils
+from zksk.composition import AndProofStmt
 
 def ZK_equality(G, H):
     # Generate two random secrets r1 and r2
