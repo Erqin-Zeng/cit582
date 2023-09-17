@@ -28,9 +28,3 @@ def ZK_equality(G, H):
     # Return the elliptic curve points C1, C2, D1, D2, and the proof
     return (C1, C2), (D1, D2), zk_proof
 
-    '''if m==1:
-        stmt1 = DLRep(C2, r1 * H, simulated=True) | DLRep((C2 - G), r1 * H)
-        stmt2 = DLRep(D2, r2 * H, simulated=True) | DLRep((D1 - G), r2 * H)
-    else: # m=0
-        stmt1 = DLRep(C2, r1 * H) | DLRep((C2 - G), r1 * H,simulated=True)
-        stmt2 = DLRep(D2, r2 * H) | DLRep((D2 - G), r2 * H,simulated=True)'''
