@@ -11,7 +11,7 @@ def ZK_equality(G, H):
     r2 = Secret(utils.get_random_num(bits=128))
     
     # Generate a random message m 
-    m = 11 #Secret(utils.get_random_num(bits=128))
+    m = 1 #Secret(utils.get_random_num(bits=128))
 
     # Create two elliptic curve points C1 and C2
     C1 = r1 * G
