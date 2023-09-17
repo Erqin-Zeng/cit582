@@ -128,7 +128,11 @@ def order_book():
         }
         order_list.append(order_dict)
 
-    return jsonify({"data": order_list})
+     # Create a result dictionary 
+    result = {"data": order_list}
+
+    # Return the result as JSON
+    return jsonify(result)
 
 #api.add_resource(Trade, '/trade')
 #api.add_resource(OrderBook, '/order_book')
