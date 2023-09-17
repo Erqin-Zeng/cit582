@@ -7,8 +7,8 @@ def ZK_equality(G, H):
     r1 = Secret(utils.get_random_num(bits=128))
     r2 = Secret(utils.get_random_num(bits=128))
     
-    # Generate a random bit m (0 or 1)
-    m = Secret(utils.get_random_num(bits=1))
+    # Generate a random message m 
+    m = Secret(utils.get_random_num(bits=128))
 
     # Create two elliptic curve points C1 and C2
     C1 = r1 * G
@@ -19,19 +19,11 @@ def ZK_equality(G, H):
     D2 = r2 * H + (m * G)
 
     # Define the proof statement for both scenarios (m=0 and m=1)
-    if m==1:
-        stmt1 = DLRep(r1 * H, r1 * H)
-        stmt2 = DLRep(r2 * H, r2 * H)
-    else: # m=0
-        stmt1 = DLRep(C2, r1 * H) 
-        stmt2 = DLRep(D2, r2 * H) 
-
-    # Generate a non-interactive zero-knowledge proof for the equality of stmt1 and stmt2
-    proof_equal_stmts = AndProofStmt(stmt1, stmt2)
+    stmt = DLRep(C1,r1*G) & DLRep(C2,r1*H+m*G) & DLRep(D1,r2*G) & DLRep(D2,r2*H+m*G)
 
     # Generate a non-interactive zero-knowledge proof for the statement
-    zk_proof = proof_equal_stmts.prove()
-
+    zk_proof = stmt.prove()
+    
     # Return the elliptic curve points C1, C2, D1, D2, and the proof
     return (C1,C2), (D1,D2), zk_proof
 
