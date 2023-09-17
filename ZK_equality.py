@@ -12,12 +12,12 @@ def ZK_equality(G, H):
     m = Secret(utils.get_random_num(bits=128)) #Secret(utils.get_random_num(bits=128))
 
     # Create two elliptic curve points C1 and C2
-    C1 = r1 * G
-    C2 = r1 * H + (m * G)
+    C1 = r1.value * G
+    C2 = r1.value * H + (m.value * G)
 
     # Create two elliptic curve points D1 and D2
-    D1 = r2 * G
-    D2 = r2 * H + (m * G)
+    D1 = r2.value * G
+    D2 = r2.value * H + (m.value * G)
 
     # Define the proof statement
     stmt = DLRep(C1,r1*G) & DLRep(C2,r1*H+m*G) & DLRep(D1,r2*G) & DLRep(D2,r2*H+m*G)
