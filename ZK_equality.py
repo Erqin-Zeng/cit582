@@ -14,14 +14,14 @@ def ZK_equality(G, H):
     m = Secret(utils.get_random_num(bits=1))
 
     # Update C2 with the addition of m*G
-    C2 += m.value * G
+    C2 = C2 + (m * G)
 
     # Create two elliptic curve points D1 and D2
     D1 = r2 * G
     D2 = r2 * H
 
     # Update D2 with the addition of m*G
-    D2 += m.value * G
+    D2 = D2 + (m * G)
 
     # Define the proof statement for both scenarios (m=0 and m=1)
     stmt = (DLRep(C1, r1 * G) & DLRep(C2, r1 * H + m * G)) | (DLRep(D1, r2 * G) & DLRep(D2, r2 * H + m * G))
@@ -31,4 +31,3 @@ def ZK_equality(G, H):
 
     # Return the elliptic curve points C1, C2, D1, D2, and the proof
     return C1, C2, D1, D2, zk_proof
-
