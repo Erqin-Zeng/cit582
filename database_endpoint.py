@@ -37,7 +37,7 @@ def verify():
     #ethoereum
     if content["payload"]["platform"] == 'Ethereum':       
         payload = content["payload"]
-        eth_pk = payload["pk"]
+        eth_pk = payload["sender_pk"]
         eth_encoded_msg = eth_account.messages.encode_defunct(text=json.dumps(payload))
         eth_sig_obj = content["sig"]
 
@@ -48,7 +48,7 @@ def verify():
     # Algorand
     if content["payload"]["platform"] == 'Algorand':
         payload = content["payload"]
-        algo_pk = payload["pk"]
+        algo_pk = payload["sender_pk"]
         algo_sig_str = content["sig"]
 
         if algosdk.util.verify_bytes(json.dumps(payload).encode('utf-8'), algo_sig_str, algo_pk):
