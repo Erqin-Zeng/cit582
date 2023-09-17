@@ -1,20 +1,12 @@
 from zksk import Secret, DLRep
 from zksk import utils
-
-def parse_hex_point(hex_point_str):
-    # Parse a hexadecimal string into an elliptic curve point
-    point_bytes = bytes.fromhex(hex_point_str)
-    x, y = int.from_bytes(point_bytes[:32], 'big'), int.from_bytes(point_bytes[32:], 'big')
-    return utils.Point(x, y)
-
+from petlib.ec import EcPt
 
 def ZK_equality(G, H):
-    print(G)
-    print("The type is : ",type(G))
-    #print(H)
-    # Parse G and H from hexadecimal strings
-    #G = parse_hex_point(G)
-    #H = parse_hex_point(H)
+    
+    # Convert G and H to EcPt objects
+    G = EcPt.from_binary(G)
+    H = EcPt.from_binary(H)
 
 
     # Generate two random secrets r1 and r2
