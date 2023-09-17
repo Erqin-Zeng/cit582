@@ -43,12 +43,12 @@ def get_ape_info(apeID):
         response = requests.get(tokenURI)
         if response.status_code == 200:
             ipfs_data = response.json()
-            if 'attributes' in ipfs_data:
-                attributes = ipfs_data['attributes']
-                for attribute in attributes:
-                    if 'trait_type' in attribute and attribute['trait_type'] == 'Eyes':
-                        data['eyes'] = attribute['value']
-                        break
+        if 'attributes' in ipfs_data:
+            attributes = ipfs_data['attributes']
+        for attribute in attributes:
+            if 'trait_type' in attribute and attribute['trait_type'] == 'Eyes':
+                data['eyes'] = attribute['value']
+                break
 
     except Exception as e:
         print(f"Error fetching data for Ape {apeID}: {str(e)}")
@@ -107,7 +107,7 @@ def get_ape_info(apeID):
         # Fetch additional data from IPFS if needed
         response = requests.get(tokenURI)
         if response.status_code == 200:
-          ipfs_data = response.json()
+            ipfs_data = response.json()
         if 'attributes' in ipfs_data:
           attributes = ipfs_data['attributes']
           for attribute in attributes:
