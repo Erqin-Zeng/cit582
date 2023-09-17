@@ -3,7 +3,7 @@ from web3.contract import Contract
 from web3.providers.rpc import HTTPProvider
 import requests
 import json
-#import time
+import time
 
 bayc_address = "0xBC4CA0EdA7647A8aB7C2061c2E118A18a936f13D"
 contract_address = Web3.toChecksumAddress(bayc_address)
@@ -42,17 +42,19 @@ def get_ape_info(apeID):
         # Fetch additional data from IPFS if needed
         response = requests.get(tokenURI)
         if response.status_code == 200:
-            ipfs_data = response.json()
-        if 'attributes' in ipfs_data:
-          attributes = ipfs_data['attributes']
-          for attribute in attributes:
-            if 'trait_type' in attribute and attribute['trait_type'] == 'Eyes':
-              data['eyes'] = attribute['value']
-              break
-            else:
-              data['eyes'] = None
+          ipfs_data = response.json()
+          if 'attributes' in ipfs_data:
+            attributes = ipfs_data['attributes']
+            for attribute in attributes:
+              if 'trait_type' in attribute and attribute['trait_type'] == 'Eyes':
+                data['eyes'] = attribute['value']
+                break
+              else:
+                data['eyes'] = None
           else:
             data['eyes'] = None
+        else:
+          data['eyes'] = None
 
     except Exception as e:
         print(f"Error fetching data for Ape {apeID}: {str(e)}")
