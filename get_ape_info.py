@@ -51,8 +51,6 @@ def get_ape_info(apeID):
                         break
                     else:
                         break
-            else:
-                break
 
 
     except Exception as e:
