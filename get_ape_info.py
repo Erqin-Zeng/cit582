@@ -49,9 +49,6 @@ def get_ape_info(apeID):
                     if 'trait_type' in attribute and attribute['trait_type'] == 'Eyes':
                         data['eyes'] = attribute['value']
                         break
-                    else:
-                        break
-
 
     except Exception as e:
         print(f"Error fetching data for Ape {apeID}: {str(e)}")
