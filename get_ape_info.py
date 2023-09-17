@@ -65,6 +65,7 @@ def get_ape_info(apeID):
     # Print the result
     print(f"Ape {apeID} Info:")
     data['owner'] = str(data['owner'])
+    print("The type is : ",type(data['image']))
     data['image'] = str(data['image'])
     data['eyes'] = str(data['eyes'])
     print("'owner':", data['owner'],)
