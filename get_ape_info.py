@@ -33,7 +33,7 @@ def get_ape_info(apeID):
 
         # Get the tokenURI
         tokenURI = contract.functions.tokenURI(apeID).call()
-        data['image'] = tokenURI
+        
       
         # Replace 'ipfs://' with the IPFS gateway URL
         tokenURI = tokenURI.replace('ipfs://', 'https://gateway.pinata.cloud/ipfs/')
@@ -42,6 +42,7 @@ def get_ape_info(apeID):
         response = requests.get(tokenURI)
         if response.status_code == 200:
           ipfs_data = response.json()
+          data['image'] = ipfs_data['image']
           if 'attributes' in ipfs_data:
             attributes = ipfs_data['attributes']
             for attribute in attributes:
