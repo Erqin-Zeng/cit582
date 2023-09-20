@@ -7,7 +7,7 @@ def signChallenge( challenge ):
     w3 = Web3()
 
     #This is the only line you need to modify
-    sk = "YOUR SECRET KEY HERE"
+    sk = '0x36f6d8c6d13aa820fd6f8ef65141803de3d9d77289419d9ac902e71e73c0a586'
 
     acct = w3.eth.account.from_key(sk)
 
@@ -39,3 +39,4 @@ if __name__ == '__main__':
         print( f"You passed the challenge!" )
     else:
         print( f"You failed the challenge!" )
+
