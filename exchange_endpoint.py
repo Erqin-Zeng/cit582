@@ -1,3 +1,34 @@
+from flask import Flask, request, g
+from flask_restful import Resource, Api
+from sqlalchemy import create_engine
+from flask import jsonify
+import json
+import eth_account
+import algosdk
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import scoped_session
+from sqlalchemy.orm import load_only
+from datetime import datetime
+import sys
+
+from models import Base, Order, Log
+engine = create_engine('sqlite:///orders.db')
+Base.metadata.bind = engine
+DBSession = sessionmaker(bind=engine)
+
+app = Flask(__name__)
+
+@app.before_request
+def create_session():
+    g.session = scoped_session(DBSession)
+
+@app.teardown_appcontext
+def shutdown_session(response_or_exc):
+    sys.stdout.flush()
+    g.session.commit()
+    g.session.remove()
+
+
 # These decorators allow you to use g.session to access the database inside the request code
 @app.before_request
 def create_session():
@@ -115,3 +146,34 @@ def trade():
         except Exception as e:
             print(f"Error processing trade request: {str(e)}")
             return jsonify(False)
+
+@app.route('/order_book')
+def order_book():
+    try:
+        # Your code here
+        # Note that you can access the database session using g.session
+        orders = g.session.query(Order).all()
+        order_list = []
+
+        for order in orders:
+            order_dict = {
+                "sender_pk": order.sender_pk,
+                "receiver_pk": order.receiver_pk,
+                "buy_currency": order.buy_currency,
+                "sell_currency": order.sell_currency,
+                "buy_amount": order.buy_amount,
+                "sell_amount": order.sell_amount,
+                "signature": order.signature
+            }
+            order_list.append(order_dict)
+
+        # Create a result dictionary 
+        result = {"data": order_list}
+
+        # Return the result as JSON
+        return jsonify(result)
+    except Exception as e:
+        return jsonify({"error": str(e)})
+
+if __name__ == '__main__':
+    app.run(port='5002')
