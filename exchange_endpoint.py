@@ -28,17 +28,6 @@ def shutdown_session(response_or_exc):
     g.session.commit()
     g.session.remove()
 
-
-# These decorators allow you to use g.session to access the database inside the request code
-@app.before_request
-def create_session():
-    g.session = scoped_session(DBSession)
-
-@app.teardown_appcontext
-def shutdown_session(response_or_exc):
-    g.session.commit()
-    g.session.remove()
-
 @app.route('/verify', methods=['GET','POST'])
 def verify():
     content = request.get_json(silent=True)
