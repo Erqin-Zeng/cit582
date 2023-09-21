@@ -10,6 +10,7 @@ from sqlalchemy.orm import scoped_session
 from sqlalchemy.orm import load_only
 from datetime import datetime
 import sys
+import requests
 
 from models import Base, Order, Log
 engine = create_engine('sqlite:///orders.db')
