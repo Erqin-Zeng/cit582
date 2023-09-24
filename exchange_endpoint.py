@@ -86,29 +86,37 @@ def connect_to_blockchains():
         
 """ Helper Methods (skeleton code for you to implement) """
 
-def log_message(message_dict):
-    msg = json.dumps(message_dict)
-
-    # TODO: Add message to the Log table
-    
-    return
+def log_message(d):
+    try:
+        log = Log(message=json.dumps(d))
+        g.session.add(log)
+        g.session.commit()
+    except Exception as e:
+        print(f"Error logging message: {str(e)}")
 
 def get_algo_keys():
     
     # TODO: Generate or read (using the mnemonic secret) 
     # the algorand public/private keys
-    
+    algo_mnemonic_secret = "eternal chapter thought smile rookie car glue catch height tool auto flame car mention broom print suffer secret glue disorder knee swallow aspect ability delay"
+    algo_sk = mnemonic.to_private_key(algo_mnemonic_secret)
+    algo_pk = mnemonic.to_public_key(algo_mnemonic_secret)
     return algo_sk, algo_pk
 
-
-def get_eth_keys(filename = "eth_mnemonic.txt"):
+def get_eth_keys():
     w3 = Web3()
     
     # TODO: Generate or read (using the mnemonic secret) 
     # the ethereum public/private keys
+    eth_mnemonic_phrase = "fruit subject silly guitar enjoy tell cat upgrade uniform anxiety laugh melt"
+
+    eth_acct = w3.eth.account.from_mnemonic(eth_mnemonic_secret)
+    eth_pk = acct._address
+    eth_sk = acct._private_key
 
     return eth_sk, eth_pk
-  
+
+
 def fill_order(order, txes=[]):
     # TODO: 
     # Match orders (same as Exchange Server II)
