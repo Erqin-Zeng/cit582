@@ -1,214 +1,123 @@
-from flask import Flask, request, g
-from flask_restful import Resource, Api
-from sqlalchemy import create_engine
-from flask import jsonify
+#!/usr/bin/python3
+
+from algosdk.v2client import algod
+from algosdk.v2client import indexer
+from algosdk import account
+from algosdk.future import transaction
+
+def connect_to_algo(connection_type=''):
+    #Connect to Algorand node maintained by PureStake
+    algod_token = "B3SU4KcVKi94Jap2VXkK83xx38bsv95K5UZm2lab"
+    
+    if connection_type == "indexer":
+        # TODO: return an instance of the v2client indexer. This is used for checking payments for tx_id's
+        algod_address = "https://testnet-algorand.api.purestake.io/idx2"
+    else:
+        # TODO: return an instance of the client for sending transactions
+        # Tutorial Link: https://developer.algorand.org/tutorials/creating-python-transaction-purestake-api/
+        algod_address = "https://testnet-algorand.api.purestake.io/ps2"
+
+    return None
+
+def send_tokens_algo( acl, sender_sk, txes):
+    params = acl.suggested_params
+    
+    # TODO: You might want to adjust the first/last valid rounds in the suggested_params
+    #       See guide for details
+
+    # TODO: For each transaction, do the following:
+    #       - Create the Payment transaction 
+    #       - Sign the transaction
+    
+    # TODO: Return a list of transaction id's
+
+    sender_pk = account.address_from_private_key(sender_sk)
+
+    tx_ids = []
+    for i,tx in enumerate(txes):
+        unsigned_tx = "Replace me with a transaction object"
+
+        # TODO: Sign the transaction
+        signed_tx = "Replace me with a SignedTransaction object"
+        
+        try:
+            print(f"Sending {tx['amount']} microalgo from {sender_pk} to {tx['receiver_pk']}" )
+            
+            # TODO: Send the transaction to the testnet
+            
+            tx_id = "Replace me with the tx_id"
+            txinfo = wait_for_confirmation_algo(acl, txid=tx_id )
+            print(f"Sent {tx['amount']} microalgo in transaction: {tx_id}\n" )
+        except Exception as e:
+            print(e)
+
+    return []
+
+# Function from Algorand Inc.
+def wait_for_confirmation_algo(client, txid):
+    """
+    Utility function to wait until the transaction is
+    confirmed before proceeding.
+    """
+    last_round = client.status().get('last-round')
+    txinfo = client.pending_transaction_info(txid)
+    while not (txinfo.get('confirmed-round') and txinfo.get('confirmed-round') > 0):
+        print("Waiting for confirmation")
+        last_round += 1
+        client.status_after_block(last_round)
+        txinfo = client.pending_transaction_info(txid)
+    print("Transaction {} confirmed in round {}.".format(txid, txinfo.get('confirmed-round')))
+    return txinfo
+
+##################################
+
+from web3 import Web3
+from web3.middleware import geth_poa_middleware
+from web3.exceptions import TransactionNotFound
 import json
-import eth_account
-import algosdk
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy.orm import scoped_session
-from sqlalchemy.orm import load_only
-from datetime import datetime
-import math
-import sys
-import traceback
+import progressbar
 
-# TODO: make sure you implement connect_to_algo, send_tokens_algo, and send_tokens_eth
-from send_tokens import connect_to_algo, connect_to_eth, send_tokens_algo, send_tokens_eth
 
-from models import Base, Order, TX
-engine = create_engine('sqlite:///orders.db')
-Base.metadata.bind = engine
-DBSession = sessionmaker(bind=engine)
+def connect_to_eth():
+    IP_ADDR='3.23.118.2' #Private Ethereum
+    PORT='8545'
 
-app = Flask(__name__)
+    w3 = Web3(Web3.HTTPProvider('http://' + IP_ADDR + ':' + PORT))
+    w3.middleware_onion.inject(geth_poa_middleware, layer=0) #Required to work on a PoA chain (like our private network)
+    w3.eth.account.enable_unaudited_hdwallet_features()
+    if w3.isConnected():
+        return w3
+    else:
+        print( "Failed to connect to Eth" )
+        return None
 
-""" Pre-defined methods (do not need to change) """
+def wait_for_confirmation_eth(w3, tx_hash):
+    print( "Waiting for confirmation" )
+    widgets = [progressbar.BouncingBar(marker=progressbar.RotatingMarker(), fill_left=False)]
+    i = 0
+    with progressbar.ProgressBar(widgets=widgets, term_width=1) as progress:
+        while True:
+            i += 1
+            progress.update(i)
+            try:
+                receipt = w3.eth.get_transaction_receipt(tx_hash)
+            except TransactionNotFound:
+                continue
+            break 
+    return receipt
 
-@app.before_request
-def create_session():
-    g.session = scoped_session(DBSession)
 
-@app.teardown_appcontext
-def shutdown_session(response_or_exc):
-    sys.stdout.flush()
-    g.session.commit()
-    g.session.remove()
+####################
+def send_tokens_eth(w3,sender_sk,txes):
+    sender_account = w3.eth.account.privateKeyToAccount(sender_sk)
+    sender_pk = sender_account._address
 
-def connect_to_blockchains():
-    try:
-        # If g.acl has not been defined yet, then trying to query it fails
-        acl_flag = False
-        g.acl
-    except AttributeError as ae:
-        acl_flag = True
+    # TODO: For each of the txes, sign and send them to the testnet
+    # Make sure you track the nonce -locally-
     
-    try:
-        if acl_flag or not g.acl.status():
-            # Define Algorand client for the application
-            g.acl = connect_to_algo()
-    except Exception as e:
-        print("Trying to connect to algorand client again")
-        print(traceback.format_exc())
-        g.acl = connect_to_algo()
-    
-    try:
-        icl_flag = False
-        g.icl
-    except AttributeError as ae:
-        icl_flag = True
-    
-    try:
-        if icl_flag or not g.icl.health():
-            # Define the index client
-            g.icl = connect_to_algo(connection_type='indexer')
-    except Exception as e:
-        print("Trying to connect to algorand indexer client again")
-        print(traceback.format_exc())
-        g.icl = connect_to_algo(connection_type='indexer')
-
-        
-    try:
-        w3_flag = False
-        g.w3
-    except AttributeError as ae:
-        w3_flag = True
-    
-    try:
-        if w3_flag or not g.w3.isConnected():
-            g.w3 = connect_to_eth()
-    except Exception as e:
-        print("Trying to connect to web3 again")
-        print(traceback.format_exc())
-        g.w3 = connect_to_eth()
-        
-""" End of pre-defined methods """
-        
-""" Helper Methods (skeleton code for you to implement) """
-
-def log_message(message_dict):
-    msg = json.dumps(message_dict)
-
-    # TODO: Add message to the Log table
-    
-    return
-
-def get_algo_keys():
-    
-    # TODO: Generate or read (using the mnemonic secret) 
-    # the algorand public/private keys
-    
-    return algo_sk, algo_pk
-
-
-def get_eth_keys(filename = "eth_mnemonic.txt"):
-    w3 = Web3()
-    
-    # TODO: Generate or read (using the mnemonic secret) 
-    # the ethereum public/private keys
-
-    return eth_sk, eth_pk
-  
-def fill_order(order, txes=[]):
-    # TODO: 
-    # Match orders (same as Exchange Server II)
-    # Validate the order has a payment to back it (make sure the counterparty also made a payment)
-    # Make sure that you end up executing all resulting transactions!
-    
-    pass
-  
-def execute_txes(txes):
-    if txes is None:
-        return True
-    if len(txes) == 0:
-        return True
-    print( f"Trying to execute {len(txes)} transactions" )
-    print( f"IDs = {[tx['order_id'] for tx in txes]}" )
-    eth_sk, eth_pk = get_eth_keys()
-    algo_sk, algo_pk = get_algo_keys()
-    
-    if not all( tx['platform'] in ["Algorand","Ethereum"] for tx in txes ):
-        print( "Error: execute_txes got an invalid platform!" )
-        print( tx['platform'] for tx in txes )
-
-    algo_txes = [tx for tx in txes if tx['platform'] == "Algorand" ]
-    eth_txes = [tx for tx in txes if tx['platform'] == "Ethereum" ]
-
-    # TODO: 
-    #       1. Send tokens on the Algorand and eth testnets, appropriately
-    #          We've provided the send_tokens_algo and send_tokens_eth skeleton methods in send_tokens.py
-    #       2. Add all transactions to the TX table
-
-    pass
-
-""" End of Helper methods"""
-  
-@app.route('/address', methods=['POST'])
-def address():
-    if request.method == "POST":
-        content = request.get_json(silent=True)
-        if 'platform' not in content.keys():
-            print( f"Error: no platform provided" )
-            return jsonify( "Error: no platform provided" )
-        if not content['platform'] in ["Ethereum", "Algorand"]:
-            print( f"Error: {content['platform']} is an invalid platform" )
-            return jsonify( f"Error: invalid platform provided: {content['platform']}"  )
-        
-        if content['platform'] == "Ethereum":
-            #Your code here
-            return jsonify( eth_pk )
-        if content['platform'] == "Algorand":
-            #Your code here
-            return jsonify( algo_pk )
-
-@app.route('/trade', methods=['POST'])
-def trade():
-    print( "In trade", file=sys.stderr )
-    connect_to_blockchains()
-    get_keys()
-    if request.method == "POST":
-        content = request.get_json(silent=True)
-        columns = [ "buy_currency", "sell_currency", "buy_amount", "sell_amount", "platform", "tx_id", "receiver_pk"]
-        fields = [ "sig", "payload" ]
-        error = False
-        for field in fields:
-            if not field in content.keys():
-                print( f"{field} not received by Trade" )
-                error = True
-        if error:
-            print( json.dumps(content) )
-            return jsonify( False )
-        
-        error = False
-        for column in columns:
-            if not column in content['payload'].keys():
-                print( f"{column} not received by Trade" )
-                error = True
-        if error:
-            print( json.dumps(content) )
-            return jsonify( False )
-        
+    tx_ids = []
+    for i,tx in enumerate(txes):
         # Your code here
-        
-        # 1. Check the signature
-        
-        # 2. Add the order to the table
-        
-        # 3a. Check if the order is backed by a transaction equal to the sell_amount (this is new)
+        continue
 
-        # 3b. Fill the order (as in Exchange Server II) if the order is valid
-        
-        # 4. Execute the transactions
-        
-        # If all goes well, return jsonify(True). else return jsonify(False)
-        return jsonify(True)
-
-@app.route('/order_book')
-def order_book():
-    fields = [ "buy_currency", "sell_currency", "buy_amount", "sell_amount", "signature", "tx_id", "receiver_pk", "sender_pk" ]
-    
-    # Same as before
-    pass
-
-if __name__ == '__main__':
-    app.run(port='5002')
+    return tx_ids
