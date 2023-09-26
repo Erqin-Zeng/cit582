@@ -1,10 +1,4 @@
-from algosdk import mnemonic
-from algosdk import account
-from web3 import Web3
-#from ethereum_hd_wallet import EthereumHDWallet
-from eth_account import Account
-
-flask import Flask, request, g
+from flask import Flask, request, g
 from flask_restful import Resource, Api
 from sqlalchemy import create_engine
 from flask import jsonify
@@ -18,6 +12,12 @@ from datetime import datetime
 import math
 import sys
 import traceback
+
+from algosdk import mnemonic
+from algosdk import account
+from web3 import Web3
+#from ethereum_hd_wallet import EthereumHDWallet
+from eth_account import Account
 
 # TODO: make sure you implement connect_to_algo, send_tokens_algo, and send_tokens_eth
 from send_tokens import connect_to_algo, connect_to_eth, send_tokens_algo, send_tokens_eth
@@ -114,12 +114,10 @@ def get_eth_keys():
     
     # TODO: Generate or read (using the mnemonic secret) 
     # the ethereum public/private keys
-    eth_mnemonic_phrase = "fruit subject silly guitar enjoy tell cat upgrade uniform anxiety laugh melt"
-
+    eth_mnemonic_secret = "fruit subject silly guitar enjoy tell cat upgrade uniform anxiety laugh melt"
     eth_acct = w3.eth.account.from_mnemonic(eth_mnemonic_secret)
     eth_pk = acct._address
     eth_sk = acct._private_key
-
     return eth_sk, eth_pk
 
 
@@ -127,7 +125,19 @@ def fill_order(order, txes=[]):
     # TODO: 
     # Match orders (same as Exchange Server II)
     # Validate the order has a payment to back it (make sure the counterparty also made a payment)
+    for tx in txes:
+        if tx['platform'] == order.sell_currency and tx['receiver_pk'] == order.sender_pk and tx['sell_amount']==order.sell_amount:
+            tx2=tx.counterparty
+            order2=order.counterparty
+            if tx2['platform'] == order2.sell_currency and tx2['receiver_pk'] == order2.sender_pk and tx2['sell_amount']==order2.sell_amount:
+                return True
+            print("Error: Counter order is not backed by a payment.")
+                return False                
+    print("Error: Order is not backed by a payment.")
+    return False
+
     # Make sure that you end up executing all resulting transactions!
+
     
     pass
   
@@ -149,10 +159,36 @@ def execute_txes(txes):
     eth_txes = [tx for tx in txes if tx['platform'] == "Ethereum" ]
 
     # TODO: 
-    #       1. Send tokens on the Algorand and eth testnets, appropriately
-    #          We've provided the send_tokens_algo and send_tokens_eth skeleton methods in send_tokens.py
-    #       2. Add all transactions to the TX table
+    #   1. Send tokens on the Algorand and eth testnets, appropriately
+    #      We've provided the send_tokens_algo and send_tokens_eth skeleton methods in send_tokens.py
+    algo_tx_ids = send_tokens_algo(g.acl, algo_sk, algo_txes)
+    eth_tx_ids = send_tokens_eth(g.w3, eth_sk, eth_txes)
+    
+    #   2. Add all transactions to the TX table
+    try:
+        for algo_tx_id in algo_tx_ids:
+            algo_tx = TX(
+                platform="Algorand",
+                receiver_pk=algo_tx['receiver_pk'],
+                order_id=algo_tx['order_id'],
+                tx_id=algo_tx_id
+            )
+            g.session.add(algo_tx)
 
+        for eth_tx_id in eth_tx_ids:
+            eth_tx = TX(
+                platform="Ethereum",
+                receiver_pk=eth_tx['receiver_pk'],
+                order_id=eth_tx['order_id'],
+                tx_id=eth_tx_id
+            )
+            g.session.add(eth_tx)
+
+        g.session.commit()
+        return True
+    except Exception as e:
+        print(f"Error adding transactions to TX table: {str(e)}")
+        return False
     pass
 
 """ End of Helper methods"""
@@ -170,9 +206,11 @@ def address():
         
         if content['platform'] == "Ethereum":
             #Your code here
+            eth_sk, eth_pk = get_eth_keys()
             return jsonify( eth_pk )
         if content['platform'] == "Algorand":
             #Your code here
+            algo_sk, algo_pk = get_algo_keys()
             return jsonify( algo_pk )
 
 @app.route('/trade', methods=['POST'])
@@ -220,9 +258,32 @@ def trade():
 @app.route('/order_book')
 def order_book():
     fields = [ "buy_currency", "sell_currency", "buy_amount", "sell_amount", "signature", "tx_id", "receiver_pk", "sender_pk" ]
-    
-    # Same as before
-    pass
+    try:
+        # Your code here
+        # Note that you can access the database session using g.session
+        orders = g.session.query(Order).all()
+        order_list = []
+
+        for order in orders:
+            order_dict = {
+                "sender_pk": order.sender_pk,
+                "receiver_pk": order.receiver_pk,
+                "buy_currency": order.buy_currency,
+                "sell_currency": order.sell_currency,
+                "buy_amount": order.buy_amount,
+                "sell_amount": order.sell_amount,
+                "signature": order.signature,
+                "tx_id": order.tx_id #add the tx_id field
+            }
+            order_list.append(order_dict)
+
+        # Create a result dictionary 
+        result = {"data": order_list}
+
+        # Return the result as JSON
+        return jsonify(result)
+    except Exception as e:
+        return jsonify({"error": str(e)})
 
 if __name__ == '__main__':
     app.run(port='5002')
